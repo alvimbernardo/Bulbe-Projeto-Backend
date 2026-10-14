@@ -13,6 +13,13 @@ class StatusUsina(str, Enum):
     inativa = "inativa"
 
 
+def converter_status(valor: str | StatusUsina, campo: str = "status") -> StatusUsina:
+    try:
+        return StatusUsina(valor)
+    except ValueError:
+        raise DadoInvalido(campo, "Status deve ser ativa, em_manutencao ou inativa.") from None
+
+
 @dataclass
 class Usina:
     id: str
@@ -30,12 +37,7 @@ class Usina:
         if len(estado) != 2 or not estado.isalpha():
             raise DadoInvalido("estado", "O estado deve ser a sigla da UF, por exemplo MG.")
         self.estado = estado
-        try:
-            self.status = StatusUsina(self.status)
-        except ValueError:
-            raise DadoInvalido(
-                "status", "Status deve ser ativa, em_manutencao ou inativa."
-            ) from None
+        self.status = converter_status(self.status)
 
     def esta_ativa(self) -> bool:
         return self.status == StatusUsina.ativa
@@ -43,7 +45,7 @@ class Usina:
     def aparece_na_listagem(self, status_filtro: StatusUsina | None = None) -> bool:
         if status_filtro is None:
             return self.esta_ativa()
-        return self.status == StatusUsina(status_filtro)
+        return self.status == converter_status(status_filtro)
 
     @property
     def localizacao(self) -> str:
