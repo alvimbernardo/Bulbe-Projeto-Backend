@@ -7,3 +7,5 @@ PyJWT>=2.10,<3
 # testes
 pytest>=8.0
 httpx>=0.27
+
+PyYAML>=6.0
