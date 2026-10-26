@@ -13,7 +13,7 @@
 
 ## Resumo dos endpoints
 
-As seis operações públicas de usinas, créditos, resumo e depoimentos já estão implementadas, além de `GET /`. Contas, sessões e rotas individuais continuam planejadas. Consulte o [roteiro de demonstração no README](../../README.md#demonstração-dos-endpoints-públicos-us06-us07-us08-e-us11).
+O README principal registra as operacoes implementadas nesta etapa; `/docs` e `/openapi.json` mostram as rotas executaveis. O contrato completo tambem inclui funcionalidades futuras fora da Sprint 2, como notificacoes.
 
 O contrato aceita `atualizado_em: null` na listagem de usinas e no resumo de créditos quando não houver usinas no critério, pois não existe uma data de origem para informar. Campos opcionais dos depoimentos sem valor são omitidos. Entradas inválidas retornam `400` no formato `Erro`, inclusive falhas de validação do FastAPI; o Swagger das rotas públicas documenta esse comportamento.
 

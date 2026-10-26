@@ -19,6 +19,11 @@ from src.repositories.usina_repository import InMemoryUsinaRepository
 from src.services.credito_service import CreditoService
 from src.services.depoimento_service import DepoimentoService
 from src.services.usina_service import UsinaService
+from src.controllers.conta_controller import router as conta_router
+from src.repositories.cliente_repository import InMemoryClienteRepository
+from src.repositories.conta_repository import InMemoryContaRepository
+from src.repositories.dados_contas import clientes_exemplo, contas_exemplo
+from src.services.conta_service import ContaService
 
 
 def _request_id(request: Request) -> str:
@@ -88,6 +93,9 @@ def create_app() -> FastAPI:
     app.state.usina_service = UsinaService(usinas)
     app.state.credito_service = CreditoService(usinas, creditos)
     app.state.depoimento_service = DepoimentoService(depoimentos)
+    clientes = InMemoryClienteRepository(clientes_exemplo())
+    contas = InMemoryContaRepository(contas_exemplo())
+    app.state.conta_service = ContaService(clientes, contas)
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -96,6 +104,7 @@ def create_app() -> FastAPI:
     app.include_router(usina_router)
     app.include_router(credito_router)
     app.include_router(depoimento_router)
+    app.include_router(conta_router)
     return app
 
 

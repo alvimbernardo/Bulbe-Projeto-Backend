@@ -7,7 +7,7 @@ Backend da plataforma **Bulbe Energia**, desenvolvido pela equipe **Squad Master
 - **Empresa parceira:** Bulbe Energia.
 - **Problema que o projeto resolve:** fornecer ao frontend dados consistentes sobre os serviços da Bulbe e permitir que cada cliente acompanhe sua ativação, suas faturas e seus pagamentos com acesso protegido. A evolução prevista substitui conteúdo fixo e simulações do frontend por informações obtidas das fontes oficiais.
 - **Continuidade:** este repositório contém o backend construído no Projeto Ciência de Dados II para atender às funcionalidades levantadas no frontend do Projeto Ciência de Dados I. O link do repositório do frontend ainda não está registrado na documentação.
-- **Estágio atual:** quatro camadas conectadas para usinas, créditos e depoimentos, com seis endpoints públicos, dados em memória, erros padronizados e testes de domínio, repositórios, serviços e HTTP. Contas, autenticação e área do cliente serão implementadas nas próximas entregas da Sprint 2; a persistência em banco está prevista para a Sprint 3.
+- **Estágio atual:** endpoints publicos e 1 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Cadastro elegivel com vinculo confirmado, hash bcrypt e unicidade atomica. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
 
 ### Requisitos do sistema
 
@@ -183,7 +183,7 @@ python -m pytest tests/controllers -q
 
 O [contrato completo](docs/api/openapi.yaml) define **21 operações em OpenAPI 3.1**, com parâmetros, schemas, respostas e status codes. Consulte também a [lista de endpoints e exemplos](docs/requisitos/lista-endpoints.md) e as [orientações da documentação da API](docs/api/README.md).
 
-**Implementação atual:** `GET /` e as seis operações públicas de usinas, créditos, resumo e depoimentos estão disponíveis. As demais operações abaixo continuam planejadas; `/docs` e `/openapi.json` mostram as rotas efetivamente implementadas.
+**Implementação atual:** `/docs` e `/openapi.json` mostram as operacoes entregues nesta branch, incluindo as etapas anteriores da sequencia da Sprint 2. Consulte o registro abaixo.
 
 ### Demonstração dos endpoints públicos (US06, US07, US08 e US11)
 
@@ -293,3 +293,11 @@ O registro formal da atividade de extensão, das ações realizadas e de seus re
 ## Contexto acadêmico
 
 Projeto desenvolvido para a disciplina **Projeto Ciência de Dados II**, no **Ibmec**, no **2º semestre de 2026**, sob orientação do professor **Cristiano de Macedo Neto, M.Sc.** Dá continuidade ao frontend entregue em Projeto Ciência de Dados I e utiliza a demanda da Bulbe Energia como contexto de aplicação.
+
+## Entregas adicionais da Sprint 2
+
+1. Cadastro elegivel com vinculo confirmado, hash bcrypt e unicidade atomica.
+
+Contas demonstrativas: `cliente01@exemplo.com` e `cliente02@exemplo.com`, senha ficticia `Bulbe2026!`. Primeiro acesso de `cliente03@exemplo.com`: identificador `BULBE-003`, codigo ficticio `345678`, senha definida no cadastro. O vinculo exige cliente ativo, email correspondente e codigo correto; a politica oficial ainda precisa de validacao com a Bulbe. Senhas usam bcrypt com salt e limite de 72 bytes UTF-8.
+
+A revisao automatizada nao substitui a revisao por um colega. Concluir no board somente depois dos testes convencionais, PR revisado e merge na main, conforme a Definicao de Pronto.
