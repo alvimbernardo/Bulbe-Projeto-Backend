@@ -5,6 +5,7 @@ from decimal import Decimal
 
 import pytest
 
+from src.domain.competencia import Competencia
 from src.domain.erros import DadoInvalido, FonteIndisponivel, RecursoNaoEncontrado
 from src.repositories.dados_exemplo import BRASILIA
 
@@ -68,3 +69,10 @@ def test_resumo_com_status_invalido_e_400(credito_service):
 def test_resumo_sem_competencia_e_400(credito_service):
     with pytest.raises(DadoInvalido):
         credito_service.resumo(None)
+
+
+def test_aceita_competencia_ja_convertida(credito_service):
+    credito = credito_service.creditos_da_usina("usina_01", Competencia(2026, 8))
+    assert credito.creditos.valor == Decimal("43980.75")
+    resumo = credito_service.resumo(Competencia(2026, 8))
+    assert resumo.total_creditos.valor == Decimal("74096.15")
