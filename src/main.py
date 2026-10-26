@@ -45,6 +45,9 @@ from src.controllers.historico_controller import router as historico_router
 from src.domain.destino_historico import DestinoHistorico
 from src.repositories.historico_repository import InMemoryHistoricoRepository
 from src.services.historico_faturas_service import HistoricoFaturasService
+from src.controllers.preferencia_controller import router as preferencia_router
+from src.repositories.preferencia_repository import InMemoryPreferenciaRepository
+from src.services.preferencia_service import PreferenciaService
 
 
 def _request_id(request: Request) -> str:
@@ -130,6 +133,7 @@ def create_app() -> FastAPI:
     destinos = {c.id: DestinoHistorico(url_historico) for c in clientes_exemplo()} if url_historico else {}
     hosts = frozenset(h.strip().casefold() for h in os.getenv("BULBE_HISTORICO_HOSTS_APROVADOS", "").split(",") if h.strip())
     app.state.historico_service = HistoricoFaturasService(InMemoryHistoricoRepository(destinos), hosts)
+    app.state.preferencia_service = PreferenciaService(InMemoryPreferenciaRepository())
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -144,6 +148,7 @@ def create_app() -> FastAPI:
     app.include_router(ativacao_router)
     app.include_router(fatura_router)
     app.include_router(historico_router)
+    app.include_router(preferencia_router)
     return app
 
 
