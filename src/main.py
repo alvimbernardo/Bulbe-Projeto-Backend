@@ -35,6 +35,12 @@ from src.controllers.ativacao_controller import router as ativacao_router
 from src.repositories.ativacao_repository import InMemoryAtivacaoRepository
 from src.repositories.dados_ativacao import ativacoes_exemplo
 from src.services.ativacao_service import AtivacaoService
+from src.controllers.fatura_controller import router as fatura_router
+from src.repositories.fatura_repository import InMemoryFaturaRepository
+from src.repositories.pagamento_repository import InMemoryPagamentoRepository
+from src.repositories.repasse_repository import InMemoryRepasseRepository
+from src.repositories.dados_faturas import faturas_exemplo, pagamentos_exemplo, repasses_exemplo
+from src.services.fatura_service import FaturaService
 
 
 def _request_id(request: Request) -> str:
@@ -111,6 +117,11 @@ def create_app() -> FastAPI:
     app.state.sessao_service = SessaoService(contas, InMemorySessaoRepository(), tokens)
     app.state.autorizacao_service = AutorizacaoService(clientes)
     app.state.ativacao_service = AtivacaoService(InMemoryAtivacaoRepository(ativacoes_exemplo()))
+    app.state.fatura_service = FaturaService(
+        InMemoryFaturaRepository(faturas_exemplo()),
+        InMemoryPagamentoRepository(pagamentos_exemplo()),
+        InMemoryRepasseRepository(repasses_exemplo()),
+    )
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -123,6 +134,7 @@ def create_app() -> FastAPI:
     app.include_router(sessao_router)
     app.include_router(cliente_router)
     app.include_router(ativacao_router)
+    app.include_router(fatura_router)
     return app
 
 

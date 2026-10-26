@@ -1253,8 +1253,9 @@ components:
               items:
                 $ref: '#/components/schemas/FaturaResumo'
             atualizado_em:
-              type: string
+              type: [string, 'null']
               format: date-time
+              description: Referencia das faturas do filtro; null quando a listagem estiver vazia.
 
     Pagamento:
       type: object
