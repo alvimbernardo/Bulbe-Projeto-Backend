@@ -646,10 +646,11 @@ components:
     sessao:
       type: http
       scheme: bearer
+      bearerFormat: JWT
       description: |
-        Token da sessão retornado por `POST /v1/sessoes`. O mecanismo definitivo
-        (token, cookie, expiração e renovação) será fixado na etapa de
-        autenticação e autorização.
+        JWT HS256 retornado em access_token por POST /v1/sessoes.
+        Envie Authorization: Bearer <access_token>. Expira em 30 minutos;
+        o logout invalida a sessao em memoria imediatamente. Nao ha refresh token.
 
   parameters:
     ClienteId:
@@ -936,8 +937,14 @@ components:
 
     Sessao:
       type: object
-      required: [sessao_id, conta_id, cliente_id, expira_em]
+      required: [sessao_id, conta_id, cliente_id, expira_em, access_token, token_type]
       properties:
+        access_token:
+          type: string
+          description: JWT assinado da sessao; tratar como credencial e nao registrar em logs.
+        token_type:
+          type: string
+          enum: [bearer]
         sessao_id:
           type: string
           example: sessao_01

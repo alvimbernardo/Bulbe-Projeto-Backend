@@ -1,5 +1,6 @@
 """Ponto de entrada da API Bulbe."""
 
+import os
 from uuid import uuid4
 
 from fastapi import FastAPI, Request
@@ -24,6 +25,10 @@ from src.repositories.cliente_repository import InMemoryClienteRepository
 from src.repositories.conta_repository import InMemoryContaRepository
 from src.repositories.dados_contas import clientes_exemplo, contas_exemplo
 from src.services.conta_service import ContaService
+from src.controllers.sessao_controller import router as sessao_router
+from src.repositories.sessao_repository import InMemorySessaoRepository
+from src.services.token_service import TokenService
+from src.services.sessao_service import SessaoService
 
 
 def _request_id(request: Request) -> str:
@@ -96,6 +101,8 @@ def create_app() -> FastAPI:
     clientes = InMemoryClienteRepository(clientes_exemplo())
     contas = InMemoryContaRepository(contas_exemplo())
     app.state.conta_service = ContaService(clientes, contas)
+    tokens = TokenService(os.getenv("BULBE_JWT_SECRET"))
+    app.state.sessao_service = SessaoService(contas, InMemorySessaoRepository(), tokens)
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -105,6 +112,7 @@ def create_app() -> FastAPI:
     app.include_router(credito_router)
     app.include_router(depoimento_router)
     app.include_router(conta_router)
+    app.include_router(sessao_router)
     return app
 
 
