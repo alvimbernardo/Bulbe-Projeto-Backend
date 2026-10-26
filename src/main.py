@@ -41,6 +41,10 @@ from src.repositories.pagamento_repository import InMemoryPagamentoRepository
 from src.repositories.repasse_repository import InMemoryRepasseRepository
 from src.repositories.dados_faturas import faturas_exemplo, pagamentos_exemplo, repasses_exemplo
 from src.services.fatura_service import FaturaService
+from src.controllers.historico_controller import router as historico_router
+from src.domain.destino_historico import DestinoHistorico
+from src.repositories.historico_repository import InMemoryHistoricoRepository
+from src.services.historico_faturas_service import HistoricoFaturasService
 
 
 def _request_id(request: Request) -> str:
@@ -122,6 +126,10 @@ def create_app() -> FastAPI:
         InMemoryPagamentoRepository(pagamentos_exemplo()),
         InMemoryRepasseRepository(repasses_exemplo()),
     )
+    url_historico = os.getenv("BULBE_HISTORICO_URL")
+    destinos = {c.id: DestinoHistorico(url_historico) for c in clientes_exemplo()} if url_historico else {}
+    hosts = frozenset(h.strip().casefold() for h in os.getenv("BULBE_HISTORICO_HOSTS_APROVADOS", "").split(",") if h.strip())
+    app.state.historico_service = HistoricoFaturasService(InMemoryHistoricoRepository(destinos), hosts)
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -135,6 +143,7 @@ def create_app() -> FastAPI:
     app.include_router(cliente_router)
     app.include_router(ativacao_router)
     app.include_router(fatura_router)
+    app.include_router(historico_router)
     return app
 
 

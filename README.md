@@ -7,7 +7,7 @@ Backend da plataforma **Bulbe Energia**, desenvolvido pela equipe **Squad Master
 - **Empresa parceira:** Bulbe Energia.
 - **Problema que o projeto resolve:** fornecer ao frontend dados consistentes sobre os serviços da Bulbe e permitir que cada cliente acompanhe sua ativação, suas faturas e seus pagamentos com acesso protegido. A evolução prevista substitui conteúdo fixo e simulações do frontend por informações obtidas das fontes oficiais.
 - **Continuidade:** este repositório contém o backend construído no Projeto Ciência de Dados II para atender às funcionalidades levantadas no frontend do Projeto Ciência de Dados I. O link do repositório do frontend ainda não está registrado na documentação.
-- **Estágio atual:** endpoints publicos e 5 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Faturas, pagamentos e etapas de repasse com verificacao de propriedade. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
+- **Estágio atual:** endpoints publicos e 6 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Historico externo autenticado, HTTPS e host aprovado, sem destino inventado. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
 
 ### Requisitos do sistema
 
@@ -301,9 +301,12 @@ Projeto desenvolvido para a disciplina **Projeto Ciência de Dados II**, no **Ib
 3. Dados do cliente e autorizacao reutilizavel, com 401 e 403.
 4. Ativacao e etapas ordenadas com progresso calculado e acesso protegido.
 5. Faturas, pagamentos e etapas de repasse com verificacao de propriedade.
+6. Historico externo autenticado, HTTPS e host aprovado, sem destino inventado.
 
 Contas demonstrativas: `cliente01@exemplo.com` e `cliente02@exemplo.com`, senha ficticia `Bulbe2026!`. Primeiro acesso de `cliente03@exemplo.com`: identificador `BULBE-003`, codigo ficticio `345678`, senha definida no cadastro. O vinculo exige cliente ativo, email correspondente e codigo correto; a politica oficial ainda precisa de validacao com a Bulbe. Senhas usam bcrypt com salt e limite de 72 bytes UTF-8.
 
 O login retorna `access_token` JWT HS256 com validade de 30 minutos e `token_type: bearer`. Use `Authorization: Bearer <access_token>` ou Authorize no Swagger. Logout revoga a sessao. O limite e de cinco tentativas falhas por cinco minutos. `BULBE_JWT_SECRET` aceita pelo menos 32 bytes; ausente, a chave e aleatoria por instancia. Reinicio descarta dados e sessoes; usar um unico processo nesta implementacao em memoria.
+
+Historico externo: `BULBE_HISTORICO_URL` configura o destino HTTPS; `BULBE_HISTORICO_HOSTS_APROVADOS` informa hosts exatos separados por virgula. Sem endereco ha 404; destino inseguro retorna 503. Nenhum endereco oficial e inventado.
 
 A revisao automatizada nao substitui a revisao por um colega. Concluir no board somente depois dos testes convencionais, PR revisado e merge na main, conforme a Definicao de Pronto.
