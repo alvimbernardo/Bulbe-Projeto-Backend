@@ -3,10 +3,10 @@ Testes da base do projeto (TEC-01 e TEC-03): API no ar e formato padrao de erro.
 """
 
 from fastapi import APIRouter
+import pytest
 from pydantic import BaseModel
 
 from src.domain.erros import ErroDeNegocio, RecursoNaoEncontrado
-from src.main import app
 
 # Rotas usadas so nos testes, para exercitar os handlers de erro.
 _rotas_de_teste = APIRouter(prefix="/_teste", include_in_schema=False)
@@ -32,7 +32,9 @@ def _validacao(corpo: _Corpo) -> dict:
     return corpo.model_dump()
 
 
-app.include_router(_rotas_de_teste)
+@pytest.fixture(autouse=True)
+def registrar_rotas_de_teste(app):
+    app.include_router(_rotas_de_teste)
 
 CAMPOS_DO_ERRO = {"codigo", "mensagem", "detalhes", "request_id"}
 

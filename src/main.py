@@ -7,16 +7,18 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from src.controllers.credito_controller import router as credito_router
+from src.controllers.depoimento_controller import router as depoimento_router
 from src.controllers.status_controller import router as status_router
+from src.controllers.usina_controller import router as usina_router
 from src.domain.erros import ErroDeNegocio
-
-app = FastAPI(
-    title="API Bulbe Energia",
-    description="Backend da plataforma Bulbe Energia, Projeto Ciencia de Dados II (Squad Master).",
-    version="1.0.0",
-)
-
-app.include_router(status_router)
+from src.repositories.credito_usina_repository import InMemoryCreditoUsinaRepository
+from src.repositories.dados_exemplo import creditos_exemplo, depoimentos_exemplo, usinas_exemplo
+from src.repositories.depoimento_repository import InMemoryDepoimentoRepository
+from src.repositories.usina_repository import InMemoryUsinaRepository
+from src.services.credito_service import CreditoService
+from src.services.depoimento_service import DepoimentoService
+from src.services.usina_service import UsinaService
 
 
 def _request_id(request: Request) -> str:
@@ -41,12 +43,10 @@ def resposta_de_erro(
     )
 
 
-@app.exception_handler(ErroDeNegocio)
 def tratar_erro_de_negocio(request: Request, exc: ErroDeNegocio) -> JSONResponse:
     return resposta_de_erro(request, exc.status, exc.codigo, exc.mensagem, exc.detalhes)
 
 
-@app.exception_handler(RequestValidationError)
 def tratar_erro_de_validacao(request: Request, exc: RequestValidationError) -> JSONResponse:
     detalhes = [
         {
@@ -64,7 +64,6 @@ def tratar_erro_de_validacao(request: Request, exc: RequestValidationError) -> J
     )
 
 
-@app.exception_handler(StarletteHTTPException)
 def tratar_erro_http(request: Request, exc: StarletteHTTPException) -> JSONResponse:
     padroes = {
         401: ("NAO_AUTENTICADO", "E necessario estar autenticado."),
@@ -74,3 +73,30 @@ def tratar_erro_http(request: Request, exc: StarletteHTTPException) -> JSONRespo
     }
     codigo, mensagem = padroes.get(exc.status_code, ("ERRO_HTTP", str(exc.detail)))
     return resposta_de_erro(request, exc.status_code, codigo, mensagem)
+
+
+def create_app() -> FastAPI:
+    """Compoe repositorios e servicos novos para cada instancia da aplicacao."""
+    app = FastAPI(
+        title="API Bulbe Energia",
+        description="Backend da plataforma Bulbe Energia, Projeto Ciencia de Dados II (Squad Master).",
+        version="1.0.0",
+    )
+    usinas = InMemoryUsinaRepository(usinas_exemplo())
+    creditos = InMemoryCreditoUsinaRepository(creditos_exemplo())
+    depoimentos = InMemoryDepoimentoRepository(depoimentos_exemplo())
+    app.state.usina_service = UsinaService(usinas)
+    app.state.credito_service = CreditoService(usinas, creditos)
+    app.state.depoimento_service = DepoimentoService(depoimentos)
+
+    app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
+    app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
+    app.add_exception_handler(StarletteHTTPException, tratar_erro_http)
+    app.include_router(status_router)
+    app.include_router(usina_router)
+    app.include_router(credito_router)
+    app.include_router(depoimento_router)
+    return app
+
+
+app = create_app()

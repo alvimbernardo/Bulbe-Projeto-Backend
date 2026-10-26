@@ -7,7 +7,7 @@ Backend da plataforma **Bulbe Energia**, desenvolvido pela equipe **Squad Master
 - **Empresa parceira:** Bulbe Energia.
 - **Problema que o projeto resolve:** fornecer ao frontend dados consistentes sobre os serviços da Bulbe e permitir que cada cliente acompanhe sua ativação, suas faturas e seus pagamentos com acesso protegido. A evolução prevista substitui conteúdo fixo e simulações do frontend por informações obtidas das fontes oficiais.
 - **Continuidade:** este repositório contém o backend construído no Projeto Ciência de Dados II para atender às funcionalidades levantadas no frontend do Projeto Ciência de Dados I. O link do repositório do frontend ainda não está registrado na documentação.
-- **Estágio atual:** estrutura das quatro camadas, rota de status, tratamento padronizado de erros e testes da base implementados. As funcionalidades de negócio do contrato serão desenvolvidas na Sprint 2 com repositórios em memória e dados de exemplo; a persistência em banco está prevista para a Sprint 3.
+- **Estágio atual:** quatro camadas conectadas para usinas, créditos e depoimentos, com seis endpoints públicos, dados em memória, erros padronizados e testes de domínio, repositórios, serviços e HTTP. Contas, autenticação e área do cliente serão implementadas nas próximas entregas da Sprint 2; a persistência em banco está prevista para a Sprint 3.
 
 ### Requisitos do sistema
 
@@ -71,7 +71,7 @@ A API segue uma arquitetura em quatro camadas:
 3. **Domínio (`domain/`):** reúne entidades com comportamento próprio e erros de negócio.
 4. **Persistência (`repositories/`):** define interfaces e implementações de acesso a dados, inicialmente em memória.
 
-O fluxo previsto é **Controller → Service → Repository**, com serviços e repositórios utilizando as entidades de domínio. Os serviços recebem repositórios por injeção de dependência. O arquivo [`src/main.py`](src/main.py) cria a aplicação, registra as rotas e os handlers de erro e será o ponto de composição das dependências.
+O fluxo é **Controller → Service → Repository**, com serviços e repositórios utilizando as entidades de domínio. Os serviços recebem repositórios por injeção de dependência. A função `create_app()` em [`src/main.py`](src/main.py) cria a aplicação, compõe os repositórios em memória e serviços e registra as rotas e os handlers de erro. Cada instância recebe seus próprios dados de exemplo. As dependências em `controllers/dependencias.py` obtêm os serviços da aplicação e permitem substituições com `app.dependency_overrides` nos testes.
 
 As regras de negócio devem ficar nos serviços e nas entidades: validar o vínculo do cliente à sessão, somar créditos da mesma competência, calcular o progresso da ativação e filtrar depoimentos autorizados. Os critérios completos estão no [backlog da Sprint 2](docs/sprints/backlog-sprint-2.md).
 
@@ -86,13 +86,17 @@ As regras de negócio devem ficar nos serviços e nas entidades: validar o vínc
 
 ```text
 src/
-├── controllers/             Apresentação: rotas HTTP; contém a rota de status
-├── services/                Serviço: estrutura para as regras de negócio
-├── repositories/            Persistência: estrutura para acesso a dados
-├── domain/                  Domínio: contém os erros de negócio
+├── controllers/             Rotas públicas, dependências e modelos de resposta
+├── services/                Regras e orquestração de usinas, créditos e depoimentos
+├── repositories/            Interfaces, implementações em memória e dados de exemplo
+├── domain/                  Entidades, objetos de valor e erros de negócio
 └── main.py                  Aplicação, registro de rotas e handlers de erro
 tests/
-├── conftest.py              Fixture compartilhada do TestClient
+├── conftest.py              Aplicação e TestClient novos a cada teste
+├── controllers/             Testes HTTP dos seis endpoints públicos
+├── domain/                  Testes das entidades e objetos de valor
+├── repositories/            Testes dos repositórios em memória
+├── services/                Testes dos serviços, incluindo mocks
 └── test_base.py             Testes da base da API e dos erros
 docs/
 ├── api/                     Contrato OpenAPI e orientação de consulta
@@ -167,13 +171,37 @@ Para executar somente os testes da base:
 python -m pytest tests/test_base.py
 ```
 
-A suíte atual verifica a rota de status, a documentação Swagger/OpenAPI, os erros de negócio, a validação de entrada, rotas inexistentes, métodos não permitidos e a propagação de `X-Request-ID`. As histórias da Sprint 2 devem acrescentar testes de sucesso e falha, incluindo tentativas de acesso aos dados de outro cliente. Ainda não existe separação de testes unitários e de integração em diretórios próprios.
+A suíte verifica domínio, repositórios, serviços e os endpoints públicos, incluindo filtros, paginação, competências, valores monetários numéricos, ausência de dados, totais incompletos e privacidade dos depoimentos. Também cobre status, Swagger/OpenAPI, erros, validação de entrada, métodos não permitidos e propagação de `X-Request-ID`. Os testes HTTP usam uma aplicação nova por teste, com repositórios e dependências isolados. Os testes de autorização serão acrescentados junto da área do cliente.
+
+Para executar somente os testes HTTP públicos:
+
+```bash
+python -m pytest tests/controllers -q
+```
 
 ## Documentação da API
 
 O [contrato completo](docs/api/openapi.yaml) define **21 operações em OpenAPI 3.1**, com parâmetros, schemas, respostas e status codes. Consulte também a [lista de endpoints e exemplos](docs/requisitos/lista-endpoints.md) e as [orientações da documentação da API](docs/api/README.md).
 
-**Implementação atual:** somente `GET /` está registrado como rota da aplicação. As operações `/v1` abaixo são o contrato planejado; a documentação em `/docs` mostra as rotas efetivamente implementadas em cada etapa.
+**Implementação atual:** `GET /` e as seis operações públicas de usinas, créditos, resumo e depoimentos estão disponíveis. As demais operações abaixo continuam planejadas; `/docs` e `/openapi.json` mostram as rotas efetivamente implementadas.
+
+### Demonstração dos endpoints públicos (US06, US07, US08 e US11)
+
+Com o servidor em execução, abra `/docs` ou consulte:
+
+| Consulta | Caminho e resultado esperado com os dados de exemplo |
+| --- | --- |
+| Usinas ativas | `GET /v1/usinas` — duas usinas ativas, `page=1`, `limit=20`, `total=2`. |
+| Filtro e paginação | `GET /v1/usinas?status=inativa&page=1&limit=1` — `usina_04`. |
+| Detalhes | `GET /v1/usinas/usina_01` — inclui `regiao` e `atualizado_em`. |
+| Créditos por competência | `GET /v1/usinas/usina_01/creditos?competencia=2026-08` — R$ 43.980,75. |
+| Total das ativas | `GET /v1/creditos-usinas/resumo?competencia=2026-08` — R$ 74.096,15, duas usinas. |
+| Depoimentos autorizados | `GET /v1/depoimentos` — dois depoimentos, com paginação. |
+| Detalhes do depoimento | `GET /v1/depoimentos/depoimento_01` — somente campos públicos. |
+
+Todas essas consultas dispensam autenticação e usam dados fictícios. A publicação de créditos reais depende da aprovação da Bulbe. A competência é obrigatória nas duas consultas de créditos. Parâmetros inválidos retornam **400**; recurso inexistente, crédito ausente ou depoimento não autorizado retornam **404**; resumo com créditos faltantes retorna **503**, sem total parcial. `GET /v1/depoimentos/depoimento_03` demonstra a proteção de um depoimento não autorizado.
+
+Os valores de `{ valor, moeda }` são números JSON, com cálculo monetário em `Decimal` no domínio. Os depoimentos omitem campos opcionais sem valor e nunca expõem `cliente_id` nem `publicacao_autorizada`. Uma listagem vazia mantém `total=0`; quando não há usinas no filtro, `atualizado_em` é `null`, sem inventar uma data. O mesmo vale para o resumo sem usinas no critério, com quantidade e total iguais a zero.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
