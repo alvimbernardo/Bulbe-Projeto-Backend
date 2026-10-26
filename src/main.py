@@ -31,6 +31,10 @@ from src.services.token_service import TokenService
 from src.services.sessao_service import SessaoService
 from src.controllers.cliente_controller import router as cliente_router
 from src.services.autorizacao_service import AutorizacaoService
+from src.controllers.ativacao_controller import router as ativacao_router
+from src.repositories.ativacao_repository import InMemoryAtivacaoRepository
+from src.repositories.dados_ativacao import ativacoes_exemplo
+from src.services.ativacao_service import AtivacaoService
 
 
 def _request_id(request: Request) -> str:
@@ -106,6 +110,7 @@ def create_app() -> FastAPI:
     tokens = TokenService(os.getenv("BULBE_JWT_SECRET"))
     app.state.sessao_service = SessaoService(contas, InMemorySessaoRepository(), tokens)
     app.state.autorizacao_service = AutorizacaoService(clientes)
+    app.state.ativacao_service = AtivacaoService(InMemoryAtivacaoRepository(ativacoes_exemplo()))
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
@@ -117,6 +122,7 @@ def create_app() -> FastAPI:
     app.include_router(conta_router)
     app.include_router(sessao_router)
     app.include_router(cliente_router)
+    app.include_router(ativacao_router)
     return app
 
 
