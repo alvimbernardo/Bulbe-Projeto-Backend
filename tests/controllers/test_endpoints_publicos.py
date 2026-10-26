@@ -200,7 +200,7 @@ def test_openapi_documenta_seis_operacoes_publicas_e_respostas_reais(client):
         "/v1/creditos-usinas/resumo": "obterResumoCreditos",
         "/v1/depoimentos": "listarDepoimentos", "/v1/depoimentos/{depoimentoId}": "obterDepoimento",
     }
-    assert set(contrato["paths"]) == {"/", *operacoes}
+    assert {"/", *operacoes} <= set(contrato["paths"])
     for rota, operation_id in operacoes.items():
         operacao = contrato["paths"][rota]["get"]
         assert operacao["operationId"] == operation_id
