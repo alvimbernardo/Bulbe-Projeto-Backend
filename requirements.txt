@@ -2,6 +2,7 @@ fastapi>=0.110
 uvicorn[standard]>=0.29
 pydantic>=2.6
 bcrypt>=4,<6
+PyJWT>=2.10,<3
 
 # testes
 pytest>=8.0

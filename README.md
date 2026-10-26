@@ -7,7 +7,7 @@ Backend da plataforma **Bulbe Energia**, desenvolvido pela equipe **Squad Master
 - **Empresa parceira:** Bulbe Energia.
 - **Problema que o projeto resolve:** fornecer ao frontend dados consistentes sobre os serviços da Bulbe e permitir que cada cliente acompanhe sua ativação, suas faturas e seus pagamentos com acesso protegido. A evolução prevista substitui conteúdo fixo e simulações do frontend por informações obtidas das fontes oficiais.
 - **Continuidade:** este repositório contém o backend construído no Projeto Ciência de Dados II para atender às funcionalidades levantadas no frontend do Projeto Ciência de Dados I. O link do repositório do frontend ainda não está registrado na documentação.
-- **Estágio atual:** endpoints publicos e 1 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Cadastro elegivel com vinculo confirmado, hash bcrypt e unicidade atomica. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
+- **Estágio atual:** endpoints publicos e 2 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Login JWT, sessao revogavel, expiracao e limite de tentativas. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
 
 ### Requisitos do sistema
 
@@ -297,7 +297,10 @@ Projeto desenvolvido para a disciplina **Projeto Ciência de Dados II**, no **Ib
 ## Entregas adicionais da Sprint 2
 
 1. Cadastro elegivel com vinculo confirmado, hash bcrypt e unicidade atomica.
+2. Login JWT, sessao revogavel, expiracao e limite de tentativas.
 
 Contas demonstrativas: `cliente01@exemplo.com` e `cliente02@exemplo.com`, senha ficticia `Bulbe2026!`. Primeiro acesso de `cliente03@exemplo.com`: identificador `BULBE-003`, codigo ficticio `345678`, senha definida no cadastro. O vinculo exige cliente ativo, email correspondente e codigo correto; a politica oficial ainda precisa de validacao com a Bulbe. Senhas usam bcrypt com salt e limite de 72 bytes UTF-8.
+
+O login retorna `access_token` JWT HS256 com validade de 30 minutos e `token_type: bearer`. Use `Authorization: Bearer <access_token>` ou Authorize no Swagger. Logout revoga a sessao. O limite e de cinco tentativas falhas por cinco minutos. `BULBE_JWT_SECRET` aceita pelo menos 32 bytes; ausente, a chave e aleatoria por instancia. Reinicio descarta dados e sessoes; usar um unico processo nesta implementacao em memoria.
 
 A revisao automatizada nao substitui a revisao por um colega. Concluir no board somente depois dos testes convencionais, PR revisado e merge na main, conforme a Definicao de Pronto.
