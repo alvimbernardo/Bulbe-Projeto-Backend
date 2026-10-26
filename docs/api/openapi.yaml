@@ -1017,8 +1017,9 @@ components:
               items:
                 $ref: '#/components/schemas/UsinaResumo'
             atualizado_em:
-              type: string
+              type: [string, 'null']
               format: date-time
+              description: Ultima atualizacao das usinas do filtro; null quando nao houver usinas.
 
     CreditoUsina:
       type: object
@@ -1050,8 +1051,9 @@ components:
         total_creditos:
           $ref: '#/components/schemas/Dinheiro'
         atualizado_em:
-          type: string
+          type: [string, 'null']
           format: date-time
+          description: Referencia dos creditos usados; null quando nao houver usinas no criterio.
 
     Depoimento:
       type: object

@@ -3,9 +3,15 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from src.main import app
+from src.main import create_app
 
 
 @pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
+def app():
+    return create_app()
+
+
+@pytest.fixture
+def client(app):
+    with TestClient(app) as client:
+        yield client
