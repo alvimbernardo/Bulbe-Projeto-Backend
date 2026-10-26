@@ -39,3 +39,10 @@ def test_competencia_invalida_vira_erro_400(texto):
         Competencia.de_texto(texto)
     assert erro.value.status == 400
     assert erro.value.detalhes[0]["campo"] == "competencia"
+
+
+@pytest.mark.parametrize("moeda", ["RS", "REAL", "R1"])
+def test_dinheiro_com_moeda_fora_do_padrao_e_recusado(moeda):
+    with pytest.raises(DadoInvalido) as erro:
+        Dinheiro(Decimal("10.00"), moeda)
+    assert erro.value.detalhes[0]["campo"] == "moeda"
