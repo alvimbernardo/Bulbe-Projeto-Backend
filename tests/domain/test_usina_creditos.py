@@ -109,3 +109,33 @@ def test_total_por_outro_criterio():
 
     assert resumo.total_creditos.valor == Decimal("40.00")
     assert resumo.criterio == "usinas_inativas"
+
+
+def test_usina_com_nome_curto_e_recusada():
+    with pytest.raises(DadoInvalido) as erro:
+        Usina(
+            id="u1",
+            nome="AB",
+            cidade="Montes Claros",
+            estado="MG",
+            regiao="Norte de Minas",
+            status="ativa",
+            atualizada_em=datetime(2026, 8, 17, 9, 0),
+        )
+    assert erro.value.status == 400
+    assert erro.value.detalhes[0]["campo"] == "nome"
+
+
+@pytest.mark.parametrize("estado", ["M", "MGS", "M1"])
+def test_usina_com_uf_invalida_e_recusada(estado):
+    with pytest.raises(DadoInvalido) as erro:
+        Usina(
+            id="u1",
+            nome="Usina Solar Teste",
+            cidade="Montes Claros",
+            estado=estado,
+            regiao="Norte de Minas",
+            status="ativa",
+            atualizada_em=datetime(2026, 8, 17, 9, 0),
+        )
+    assert erro.value.detalhes[0]["campo"] == "estado"
