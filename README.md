@@ -114,7 +114,7 @@ Requer Python 3.11 ou superior. Execute os comandos a partir da raiz do reposit�
 1. Clonar o repositório e entrar na pasta:
 
    ```bash
-   git clone https://github.com/bernardoalvimibmec/Bulbe-Projeto-Backend.git
+   git clone https://github.com/alvimbernardo/Bulbe-Projeto-Backend.git
    cd Bulbe-Projeto-Backend
    ```
 
@@ -252,8 +252,8 @@ A persistência com SQLAlchemy está prevista para a Sprint 3. Ainda não há mo
 
 ## Sprints e backlog
 
-- **Board do projeto:** [Backend Sprint 1 — GitHub Projects](https://github.com/users/bernardoalvimibmec/projects/3/views/1).
-- **Issues:** [backlog no GitHub](https://github.com/bernardoalvimibmec/Bulbe-Projeto-Backend/issues).
+- **Board do projeto:** [Backend Sprint 1 — GitHub Projects](https://github.com/users/alvimbernardo/projects/3/views/1).
+- **Issues:** [backlog no GitHub](https://github.com/alvimbernardo/Bulbe-Projeto-Backend/issues).
 - **Sprint 1:** elicitação dos requisitos, definição do contrato da API e modelagem UML.
 - **Sprint 2:** de **07/10/2026 a 21/10/2026**, com **Review em 26/10/2026**. Objetivo: API funcionando de ponta a ponta com dados em memória, quatro camadas, regras de negócio e testes passando.
 - **Planejamento detalhado:** [backlog da Sprint 2](docs/sprints/backlog-sprint-2.md), com prioridades, dependências, critérios de aceite e definição de pronto.
