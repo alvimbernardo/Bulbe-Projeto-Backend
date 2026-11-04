@@ -60,7 +60,7 @@ Políticas de primeiro acesso e sessão, fontes oficiais, divulgação pública 
 | PlantUML | Diagramas UML versionados em `.puml`, com imagens em SVG. |
 | Git e GitHub | Versionamento, issues, pull requests e board do projeto. |
 
-As dependências estão em [`requirements.txt`](requirements.txt). A Sprint 2 prevê armazenamento em memória. **SQLAlchemy está previsto para a Sprint 3**, mas ainda não foi adicionado às dependências; o banco de dados e sua configuração ainda não estão definidos neste repositório.
+As dependências estão em [`requirements.txt`](requirements.txt). Na Sprint 3 entraram **SQLAlchemy 2** (ORM) e **Alembic** (migrations), com **SQLite** no desenvolvimento. Veja [Banco de dados](#banco-de-dados).
 
 ## Arquitetura
 
@@ -88,15 +88,18 @@ As regras de negócio devem ficar nos serviços e nas entidades: validar o vínc
 src/
 ├── controllers/             Rotas públicas, dependências e modelos de resposta
 ├── services/                Regras e orquestração de usinas, créditos e depoimentos
-├── repositories/            Interfaces, implementações em memória e dados de exemplo
+├── repositories/            Interfaces, implementações em memória e SQL, e dados de exemplo
 ├── domain/                  Entidades, objetos de valor e erros de negócio
+├── db/                      Conexão, modelos SQLAlchemy, tipos de coluna e seed
 └── main.py                  Aplicação, registro de rotas e handlers de erro
+migrations/                  Migrations do Alembic (versions/)
 tests/
 ├── conftest.py              Aplicação e TestClient novos a cada teste
 ├── controllers/             Testes HTTP dos seis endpoints públicos
 ├── domain/                  Testes das entidades e objetos de valor
 ├── repositories/            Testes dos repositórios em memória
 ├── services/                Testes dos serviços, incluindo mocks
+├── integracao/              Repositórios SQL, API com banco e migrations
 └── test_base.py             Testes da base da API e dos erros
 docs/
 ├── api/                     Contrato OpenAPI e orientação de consulta
@@ -104,6 +107,7 @@ docs/
 ├── requisitos/              Requisitos técnicos e lista de endpoints
 └── sprints/                 Backlog, critérios de aceite e plano da Sprint 2
 requirements.txt             Dependências da aplicação e dos testes
+alembic.ini                  Configuração do Alembic
 pytest.ini                   Configuração do pytest
 ```
 
@@ -144,13 +148,20 @@ Requer Python 3.11 ou superior. Execute os comandos a partir da raiz do reposit�
    python -m pip install -r requirements.txt
    ```
 
-5. Iniciar o servidor:
+5. Criar as tabelas e carregar os dados de demonstração:
+
+   ```bash
+   alembic upgrade head
+   python -m src.db.seed
+   ```
+
+6. Iniciar o servidor:
 
    ```bash
    python -m uvicorn src.main:app --reload
    ```
 
-A base atual funciona sem variáveis de ambiente, arquivo `.env` ou migrations. Essas configurações deverão ser documentadas quando a persistência e as integrações forem implementadas.
+Sem variáveis de ambiente, a API usa o SQLite `bulbe.db` na raiz do projeto. Detalhes em [Banco de dados](#banco-de-dados).
 
 - **API e rota de status:** <http://localhost:8000/>.
 - **Swagger UI:** <http://localhost:8000/docs>.
@@ -244,11 +255,50 @@ Datas seguem ISO 8601, datas com hora incluem fuso horário e valores monetário
 
 ## Banco de dados
 
-Na Sprint 2, os repositórios serão implementados **em memória**, com dados de exemplo para a demonstração. Esses dados não representam informações oficiais e não serão persistidos entre execuções.
+Na Sprint 3 a persistência passa a ser um banco relacional, com **SQLAlchemy 2** e migrations do **Alembic**. A troca é feita repositório por repositório: cada interface ganha uma implementação `Sql...Repository` com os mesmos métodos da versão em memória, e só o `src/main.py` escolhe qual usar. Services, controllers e domínio não mudam.
 
-O [diagrama de classes do domínio](docs/diagramas/classes-dominio.svg) modela contas, sessões, clientes, usinas, créditos, depoimentos, ativação, faturas, pagamentos, repasses, preferências e notificações. Ele orienta a modelagem, mas ainda não é um modelo físico do banco.
+| Tabela | Chave primária | Chave estrangeira | Repositório |
+| --- | --- | --- | --- |
+| `usinas` | `id` | — | `SqlUsinaRepository` |
+| `creditos_usinas` | `usina_id` + `competencia` | `usina_id` → `usinas.id` | `SqlCreditoUsinaRepository` |
+| `depoimentos` | `id` | — | `SqlDepoimentoRepository` |
 
-A persistência com SQLAlchemy está prevista para a Sprint 3. Ainda não há modelo lógico/físico, dicionário de dados ou migrations implementados e versionados; a escolha do banco e a configuração de conexão serão documentadas nessa etapa.
+Os demais repositórios (contas, sessões, ativação, faturas, pagamentos, repasses, histórico e preferências) continuam em memória até receberem a sua versão SQL.
+
+### Preparar o banco local
+
+```powershell
+python -m pip install -r requirements.txt
+alembic upgrade head
+python -m src.db.seed
+python -m uvicorn src.main:app --reload
+```
+
+- `alembic upgrade head` cria as tabelas no `bulbe.db` (SQLite). Para conferir a versão aplicada: `alembic current`.
+- `python -m src.db.seed` grava os dados de demonstração. Pode ser executado de novo sem duplicar registros.
+- Os dados continuam no banco depois de reiniciar a API.
+
+| Variável | Padrão | Uso |
+| --- | --- | --- |
+| `BULBE_DATABASE_URL` | `sqlite:///./bulbe.db` | Endereço do banco. PostgreSQL: `postgresql+psycopg://usuario:senha@localhost:5432/bulbe` |
+| `BULBE_PERSISTENCIA` | `banco` | `memoria` volta a usar os repositórios em memória |
+
+### Nova migration
+
+Depois de alterar `src/db/models.py`:
+
+```powershell
+alembic revision --autogenerate -m "descricao da mudanca"
+alembic upgrade head
+```
+
+Leia o arquivo gerado em `migrations/versions/` antes de aplicar. O schema nunca é criado no startup da API, só por migration. Os arquivos `*.db` ficam fora do Git.
+
+### Testes com banco
+
+Os testes unitários usam os repositórios em memória (`tests/conftest.py` define `BULBE_PERSISTENCIA=memoria`). Os testes de `tests/integracao/` criam um SQLite temporário para cada teste e cobrem os repositórios SQL, a API ligada ao banco, a persistência após reinício e as migrations (`upgrade` e `downgrade`).
+
+O [diagrama de classes do domínio](docs/diagramas/classes-dominio.svg) continua sendo a referência para as próximas tabelas.
 
 ## Sprints e backlog
 
