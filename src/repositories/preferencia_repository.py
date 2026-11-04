@@ -3,6 +3,9 @@
 from abc import ABC, abstractmethod
 from threading import Lock
 
+from sqlalchemy.orm import sessionmaker
+
+from src.db.models import PreferenciaNotificacaoModel
 from src.domain.preferencia_notificacao import PreferenciaNotificacao
 
 
@@ -22,4 +25,20 @@ class InMemoryPreferenciaRepository(PreferenciaRepository):
             if anterior and anterior.mesma_configuracao(preferencia):
                 return anterior
             self._preferencias[preferencia.cliente_id] = preferencia
+            return preferencia
+
+
+class SqlPreferenciaRepository(PreferenciaRepository):
+    def __init__(self, sessoes: sessionmaker) -> None:
+        self._sessoes = sessoes
+
+    def salvar(self, preferencia: PreferenciaNotificacao) -> PreferenciaNotificacao:
+        with self._sessoes() as sessao:
+            modelo = sessao.get(PreferenciaNotificacaoModel, preferencia.cliente_id, with_for_update=True)
+            if modelo is not None:
+                anterior = modelo.para_dominio()
+                if anterior.mesma_configuracao(preferencia):
+                    return anterior
+            sessao.merge(PreferenciaNotificacaoModel.de_dominio(preferencia))
+            sessao.commit()
             return preferencia
