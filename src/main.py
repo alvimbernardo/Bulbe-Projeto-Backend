@@ -25,24 +25,24 @@ from src.services.credito_service import CreditoService
 from src.services.depoimento_service import DepoimentoService
 from src.services.usina_service import UsinaService
 from src.controllers.conta_controller import router as conta_router
-from src.repositories.cliente_repository import InMemoryClienteRepository
-from src.repositories.conta_repository import InMemoryContaRepository
+from src.repositories.cliente_repository import InMemoryClienteRepository, SqlClienteRepository
+from src.repositories.conta_repository import InMemoryContaRepository, SqlContaRepository
 from src.repositories.dados_contas import clientes_exemplo, contas_exemplo
 from src.services.conta_service import ContaService
 from src.controllers.sessao_controller import router as sessao_router
-from src.repositories.sessao_repository import InMemorySessaoRepository
+from src.repositories.sessao_repository import InMemorySessaoRepository, SqlSessaoRepository
 from src.services.token_service import TokenService
 from src.services.sessao_service import SessaoService
 from src.controllers.cliente_controller import router as cliente_router
 from src.services.autorizacao_service import AutorizacaoService
 from src.controllers.ativacao_controller import router as ativacao_router
-from src.repositories.ativacao_repository import InMemoryAtivacaoRepository
+from src.repositories.ativacao_repository import InMemoryAtivacaoRepository, SqlAtivacaoRepository
 from src.repositories.dados_ativacao import ativacoes_exemplo
 from src.services.ativacao_service import AtivacaoService
 from src.controllers.fatura_controller import router as fatura_router
-from src.repositories.fatura_repository import InMemoryFaturaRepository
-from src.repositories.pagamento_repository import InMemoryPagamentoRepository
-from src.repositories.repasse_repository import InMemoryRepasseRepository
+from src.repositories.fatura_repository import InMemoryFaturaRepository, SqlFaturaRepository
+from src.repositories.pagamento_repository import InMemoryPagamentoRepository, SqlPagamentoRepository
+from src.repositories.repasse_repository import InMemoryRepasseRepository, SqlRepasseRepository
 from src.repositories.dados_faturas import faturas_exemplo, pagamentos_exemplo, repasses_exemplo
 from src.services.fatura_service import FaturaService
 from src.controllers.historico_controller import router as historico_router
@@ -50,7 +50,7 @@ from src.domain.destino_historico import DestinoHistorico
 from src.repositories.historico_repository import InMemoryHistoricoRepository
 from src.services.historico_faturas_service import HistoricoFaturasService
 from src.controllers.preferencia_controller import router as preferencia_router
-from src.repositories.preferencia_repository import InMemoryPreferenciaRepository
+from src.repositories.preferencia_repository import InMemoryPreferenciaRepository, SqlPreferenciaRepository
 from src.services.preferencia_service import PreferenciaService
 
 
@@ -120,30 +120,40 @@ def create_app() -> FastAPI:
         usinas = SqlUsinaRepository(sessoes)
         creditos = SqlCreditoUsinaRepository(sessoes)
         depoimentos = SqlDepoimentoRepository(sessoes)
+        clientes = SqlClienteRepository(sessoes)
+        contas = SqlContaRepository(sessoes)
+        sessoes_autenticadas = SqlSessaoRepository(sessoes)
+        ativacoes = SqlAtivacaoRepository(sessoes)
+        faturas = SqlFaturaRepository(sessoes)
+        pagamentos = SqlPagamentoRepository(sessoes)
+        repasses = SqlRepasseRepository(sessoes)
+        preferencias = SqlPreferenciaRepository(sessoes)
     else:
         usinas = InMemoryUsinaRepository(usinas_exemplo())
         creditos = InMemoryCreditoUsinaRepository(creditos_exemplo())
         depoimentos = InMemoryDepoimentoRepository(depoimentos_exemplo())
+        clientes = InMemoryClienteRepository(clientes_exemplo())
+        contas = InMemoryContaRepository(contas_exemplo())
+        sessoes_autenticadas = InMemorySessaoRepository()
+        ativacoes = InMemoryAtivacaoRepository(ativacoes_exemplo())
+        faturas = InMemoryFaturaRepository(faturas_exemplo())
+        pagamentos = InMemoryPagamentoRepository(pagamentos_exemplo())
+        repasses = InMemoryRepasseRepository(repasses_exemplo())
+        preferencias = InMemoryPreferenciaRepository()
     app.state.usina_service = UsinaService(usinas)
     app.state.credito_service = CreditoService(usinas, creditos)
     app.state.depoimento_service = DepoimentoService(depoimentos)
-    clientes = InMemoryClienteRepository(clientes_exemplo())
-    contas = InMemoryContaRepository(contas_exemplo())
     app.state.conta_service = ContaService(clientes, contas)
     tokens = TokenService(os.getenv("BULBE_JWT_SECRET"))
-    app.state.sessao_service = SessaoService(contas, InMemorySessaoRepository(), tokens)
+    app.state.sessao_service = SessaoService(contas, sessoes_autenticadas, tokens)
     app.state.autorizacao_service = AutorizacaoService(clientes)
-    app.state.ativacao_service = AtivacaoService(InMemoryAtivacaoRepository(ativacoes_exemplo()))
-    app.state.fatura_service = FaturaService(
-        InMemoryFaturaRepository(faturas_exemplo()),
-        InMemoryPagamentoRepository(pagamentos_exemplo()),
-        InMemoryRepasseRepository(repasses_exemplo()),
-    )
+    app.state.ativacao_service = AtivacaoService(ativacoes)
+    app.state.fatura_service = FaturaService(faturas, pagamentos, repasses)
     url_historico = os.getenv("BULBE_HISTORICO_URL")
     destinos = {c.id: DestinoHistorico(url_historico) for c in clientes_exemplo()} if url_historico else {}
     hosts = frozenset(h.strip().casefold() for h in os.getenv("BULBE_HISTORICO_HOSTS_APROVADOS", "").split(",") if h.strip())
     app.state.historico_service = HistoricoFaturasService(InMemoryHistoricoRepository(destinos), hosts)
-    app.state.preferencia_service = PreferenciaService(InMemoryPreferenciaRepository())
+    app.state.preferencia_service = PreferenciaService(preferencias)
 
     app.add_exception_handler(ErroDeNegocio, tratar_erro_de_negocio)
     app.add_exception_handler(RequestValidationError, tratar_erro_de_validacao)
