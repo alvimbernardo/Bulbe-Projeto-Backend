@@ -3,6 +3,10 @@
 from abc import ABC, abstractmethod
 from typing import Iterable
 
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker
+
+from src.db.models import DepoimentoModel
 from src.domain.depoimento import Depoimento
 
 
@@ -23,3 +27,18 @@ class InMemoryDepoimentoRepository(DepoimentoRepository):
 
     def obter(self, depoimento_id: str) -> Depoimento | None:
         return self._depoimentos.get(depoimento_id)
+
+
+class SqlDepoimentoRepository(DepoimentoRepository):
+    def __init__(self, sessoes: sessionmaker) -> None:
+        self._sessoes = sessoes
+
+    def listar(self) -> list[Depoimento]:
+        with self._sessoes() as sessao:
+            modelos = sessao.scalars(select(DepoimentoModel).order_by(DepoimentoModel.id)).all()
+            return [modelo.para_dominio() for modelo in modelos]
+
+    def obter(self, depoimento_id: str) -> Depoimento | None:
+        with self._sessoes() as sessao:
+            modelo = sessao.get(DepoimentoModel, depoimento_id)
+            return modelo.para_dominio() if modelo else None

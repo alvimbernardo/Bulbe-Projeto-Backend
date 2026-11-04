@@ -13,10 +13,14 @@ from src.controllers.depoimento_controller import router as depoimento_router
 from src.controllers.status_controller import router as status_router
 from src.controllers.usina_controller import router as usina_router
 from src.domain.erros import ErroDeNegocio
-from src.repositories.credito_usina_repository import InMemoryCreditoUsinaRepository
+from src.db.database import criar_engine, criar_fabrica_de_sessoes, persistencia_em_banco
+from src.repositories.credito_usina_repository import (
+    InMemoryCreditoUsinaRepository,
+    SqlCreditoUsinaRepository,
+)
 from src.repositories.dados_exemplo import creditos_exemplo, depoimentos_exemplo, usinas_exemplo
-from src.repositories.depoimento_repository import InMemoryDepoimentoRepository
-from src.repositories.usina_repository import InMemoryUsinaRepository
+from src.repositories.depoimento_repository import InMemoryDepoimentoRepository, SqlDepoimentoRepository
+from src.repositories.usina_repository import InMemoryUsinaRepository, SqlUsinaRepository
 from src.services.credito_service import CreditoService
 from src.services.depoimento_service import DepoimentoService
 from src.services.usina_service import UsinaService
@@ -111,9 +115,15 @@ def create_app() -> FastAPI:
         description="Backend da plataforma Bulbe Energia, Projeto Ciencia de Dados II (Squad Master).",
         version="1.0.0",
     )
-    usinas = InMemoryUsinaRepository(usinas_exemplo())
-    creditos = InMemoryCreditoUsinaRepository(creditos_exemplo())
-    depoimentos = InMemoryDepoimentoRepository(depoimentos_exemplo())
+    if persistencia_em_banco():
+        sessoes = criar_fabrica_de_sessoes(criar_engine())
+        usinas = SqlUsinaRepository(sessoes)
+        creditos = SqlCreditoUsinaRepository(sessoes)
+        depoimentos = SqlDepoimentoRepository(sessoes)
+    else:
+        usinas = InMemoryUsinaRepository(usinas_exemplo())
+        creditos = InMemoryCreditoUsinaRepository(creditos_exemplo())
+        depoimentos = InMemoryDepoimentoRepository(depoimentos_exemplo())
     app.state.usina_service = UsinaService(usinas)
     app.state.credito_service = CreditoService(usinas, creditos)
     app.state.depoimento_service = DepoimentoService(depoimentos)

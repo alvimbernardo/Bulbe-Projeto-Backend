@@ -1,5 +1,9 @@
 """Fixtures compartilhadas pelos testes."""
 
+import os
+
+os.environ["BULBE_PERSISTENCIA"] = "memoria"
+
 import pytest
 from fastapi.testclient import TestClient
 
