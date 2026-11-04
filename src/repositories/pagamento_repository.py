@@ -3,6 +3,9 @@
 from abc import ABC, abstractmethod
 from typing import Iterable
 
+from sqlalchemy.orm import sessionmaker
+
+from src.db.models import PagamentoModel
 from src.domain.pagamento import Pagamento
 
 
@@ -17,3 +20,13 @@ class InMemoryPagamentoRepository(PagamentoRepository):
 
     def obter_por_fatura(self, fatura_id: str) -> Pagamento | None:
         return self._pagamentos.get(fatura_id)
+
+
+class SqlPagamentoRepository(PagamentoRepository):
+    def __init__(self, sessoes: sessionmaker) -> None:
+        self._sessoes = sessoes
+
+    def obter_por_fatura(self, fatura_id: str) -> Pagamento | None:
+        with self._sessoes() as sessao:
+            modelo = sessao.get(PagamentoModel, fatura_id)
+            return modelo.para_dominio() if modelo else None

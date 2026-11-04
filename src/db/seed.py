@@ -1,26 +1,48 @@
-"""Carga dos dados de demonstracao de usinas, creditos e depoimentos no banco."""
+"""Carga dos dados de demonstracao no banco."""
 
 from sqlalchemy.orm import sessionmaker
 
 from src.db.database import criar_engine, criar_fabrica_de_sessoes
-from src.db.models import CreditoUsinaModel, DepoimentoModel, UsinaModel
+from src.db.models import (
+    AtivacaoModel,
+    ClienteModel,
+    ContaModel,
+    CreditoUsinaModel,
+    DepoimentoModel,
+    FaturaModel,
+    PagamentoModel,
+    RepasseModel,
+    UsinaModel,
+)
+from src.repositories.dados_ativacao import ativacoes_exemplo
+from src.repositories.dados_contas import clientes_exemplo, contas_exemplo
 from src.repositories.dados_exemplo import creditos_exemplo, depoimentos_exemplo, usinas_exemplo
+from src.repositories.dados_faturas import faturas_exemplo, pagamentos_exemplo, repasses_exemplo
+
+_ETAPAS = (
+    ("usinas", UsinaModel, usinas_exemplo),
+    ("creditos_usinas", CreditoUsinaModel, creditos_exemplo),
+    ("depoimentos", DepoimentoModel, depoimentos_exemplo),
+    ("clientes", ClienteModel, clientes_exemplo),
+    ("contas", ContaModel, contas_exemplo),
+    ("ativacoes", AtivacaoModel, ativacoes_exemplo),
+    ("faturas", FaturaModel, faturas_exemplo),
+    ("pagamentos", PagamentoModel, pagamentos_exemplo),
+    ("repasses", RepasseModel, repasses_exemplo),
+)
 
 
 def carregar_dados_de_exemplo(sessoes: sessionmaker) -> dict[str, int]:
-    usinas = usinas_exemplo()
-    creditos = creditos_exemplo()
-    depoimentos = depoimentos_exemplo()
+    totais: dict[str, int] = {}
     with sessoes() as sessao:
-        for usina in usinas:
-            sessao.merge(UsinaModel.de_dominio(usina))
-        sessao.flush()
-        for credito in creditos:
-            sessao.merge(CreditoUsinaModel.de_dominio(credito))
-        for depoimento in depoimentos:
-            sessao.merge(DepoimentoModel.de_dominio(depoimento))
+        for tabela, modelo, dados in _ETAPAS:
+            entidades = dados()
+            for entidade in entidades:
+                sessao.merge(modelo.de_dominio(entidade))
+            sessao.flush()
+            totais[tabela] = len(entidades)
         sessao.commit()
-    return {"usinas": len(usinas), "creditos_usinas": len(creditos), "depoimentos": len(depoimentos)}
+    return totais
 
 
 if __name__ == "__main__":

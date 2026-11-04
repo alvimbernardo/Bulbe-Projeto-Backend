@@ -7,7 +7,7 @@ Backend da plataforma **Bulbe Energia**, desenvolvido pela equipe **Squad Master
 - **Empresa parceira:** Bulbe Energia.
 - **Problema que o projeto resolve:** fornecer ao frontend dados consistentes sobre os serviços da Bulbe e permitir que cada cliente acompanhe sua ativação, suas faturas e seus pagamentos com acesso protegido. A evolução prevista substitui conteúdo fixo e simulações do frontend por informações obtidas das fontes oficiais.
 - **Continuidade:** este repositório contém o backend construído no Projeto Ciência de Dados II para atender às funcionalidades levantadas no frontend do Projeto Ciência de Dados I. O link do repositório do frontend ainda não está registrado na documentação.
-- **Estágio atual:** endpoints publicos e 8 de 8 entregas seguintes implementadas com dados ficticios em memoria. Ultima entrega: Contrato, jornada integrada, roteiro da review e CI Linux Python 3.11/3.14. Banco e migrations pertencem a Sprint 3; US15 continua fora do escopo.
+- **Estágio atual:** Sprint 3. As 18 operações da Sprint 2 agora persistem em banco relacional (SQLAlchemy 2 + Alembic, SQLite no desenvolvimento), com 13 tabelas, migrations versionadas, seed de demonstração e testes de integração. Dados de demonstração continuam fictícios; US15 continua fora do escopo.
 
 ### Requisitos do sistema
 
@@ -81,6 +81,7 @@ As regras de negócio devem ficar nos serviços e nas entidades: validar o vínc
 - **Sequência da autenticação:** [PlantUML](docs/diagramas/sequencia-autenticacao.puml) · [SVG](docs/diagramas/sequencia-autenticacao.svg).
 - **Atividades da autenticação:** [PlantUML](docs/diagramas/atividade-autenticacao.puml) · [SVG](docs/diagramas/atividade-autenticacao.svg).
 - **Classes do domínio:** [PlantUML](docs/diagramas/classes-dominio.puml) · [SVG](docs/diagramas/classes-dominio.svg).
+- **Modelo do banco de dados (tabelas e chaves):** [PlantUML](docs/diagramas/modelo-banco.puml) · [SVG](docs/diagramas/modelo-banco.svg).
 
 ## Estrutura de pastas
 
@@ -255,15 +256,29 @@ Datas seguem ISO 8601, datas com hora incluem fuso horário e valores monetário
 
 ## Banco de dados
 
-Na Sprint 3 a persistência passa a ser um banco relacional, com **SQLAlchemy 2** e migrations do **Alembic**. A troca é feita repositório por repositório: cada interface ganha uma implementação `Sql...Repository` com os mesmos métodos da versão em memória, e só o `src/main.py` escolhe qual usar. Services, controllers e domínio não mudam.
+Na Sprint 3 a persistência passou a ser um banco relacional, com **SQLAlchemy 2** e migrations do **Alembic**. A troca foi feita repositório por repositório: cada interface ganha uma implementação `Sql...Repository` com os mesmos métodos da versão em memória, e só o `src/main.py` escolhe qual usar. Services, controllers e domínio não mudam.
 
 | Tabela | Chave primária | Chave estrangeira | Repositório |
 | --- | --- | --- | --- |
 | `usinas` | `id` | — | `SqlUsinaRepository` |
-| `creditos_usinas` | `usina_id` + `competencia` | `usina_id` → `usinas.id` | `SqlCreditoUsinaRepository` |
+| `creditos_usinas` | `usina_id` + `competencia` | `usina_id` → `usinas` | `SqlCreditoUsinaRepository` |
 | `depoimentos` | `id` | — | `SqlDepoimentoRepository` |
+| `clientes` | `id` | — (`identificador_cliente` único) | `SqlClienteRepository` |
+| `contas` | `id` | `cliente_id` → `clientes` (único; `email` único) | `SqlContaRepository` |
+| `sessoes` | `id` | `conta_id` → `contas`, `cliente_id` → `clientes` | `SqlSessaoRepository` |
+| `ativacoes` | `cliente_id` | `cliente_id` → `clientes` | `SqlAtivacaoRepository` |
+| `etapas_ativacao` | `cliente_id` + `id` | `cliente_id` → `ativacoes` | (carregada com a ativação) |
+| `faturas` | `id` | `cliente_id` → `clientes` | `SqlFaturaRepository` |
+| `pagamentos` | `fatura_id` | `fatura_id` → `faturas` | `SqlPagamentoRepository` |
+| `repasses` | `fatura_id` | `fatura_id` → `faturas` | `SqlRepasseRepository` |
+| `etapas_repasse` | `fatura_id` + `id` | `fatura_id` → `repasses` | (carregada com o repasse) |
+| `preferencias_notificacao` | `cliente_id` | `cliente_id` → `clientes` | `SqlPreferenciaRepository` |
 
-Os demais repositórios (contas, sessões, ativação, faturas, pagamentos, repasses, histórico e preferências) continuam em memória até receberem a sua versão SQL.
+O diagrama completo está em [`docs/diagramas/modelo-banco.svg`](docs/diagramas/modelo-banco.svg). As migrations são `0001` (usinas, créditos e depoimentos) e `0002` (clientes, contas, sessões, ativação, faturas, pagamentos, repasses e preferências).
+
+As unicidades de conta (um cliente, um email) ficam no próprio banco: um cadastro repetido, mesmo simultâneo, continua respondendo 409. Sessões também são gravadas, então o logout revoga o token mesmo depois de reiniciar a API. O destino do histórico externo de faturas continua vindo da configuração (`BULBE_HISTORICO_URL` e `BULBE_HISTORICO_HOSTS_APROVADOS`), porque não é dado de cliente.
+
+Para que tokens emitidos antes de um reinício continuem válidos, defina `BULBE_JWT_SECRET` com pelo menos 32 bytes. Sem ela, cada inicialização gera uma chave nova e é preciso fazer login de novo.
 
 ### Preparar o banco local
 
@@ -296,7 +311,7 @@ Leia o arquivo gerado em `migrations/versions/` antes de aplicar. O schema nunca
 
 ### Testes com banco
 
-Os testes unitários usam os repositórios em memória (`tests/conftest.py` define `BULBE_PERSISTENCIA=memoria`). Os testes de `tests/integracao/` criam um SQLite temporário para cada teste e cobrem os repositórios SQL, a API ligada ao banco, a persistência após reinício e as migrations (`upgrade` e `downgrade`).
+Os testes unitários usam os repositórios em memória (`tests/conftest.py` define `BULBE_PERSISTENCIA=memoria`). Os testes de `tests/integracao/` criam um SQLite temporário para cada teste e cobrem os repositórios SQL, as chaves estrangeiras e unicidades, a jornada do cliente com a API ligada ao banco, a persistência após reinício (conta criada, logout e preferências) e as migrations (`upgrade` e `downgrade`).
 
 O [diagrama de classes do domínio](docs/diagramas/classes-dominio.svg) continua sendo a referência para as próximas tabelas.
 

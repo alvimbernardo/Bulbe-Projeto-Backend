@@ -1,0 +1,163 @@
+@startuml
+title Modelo do Banco de Dados — API Bulbe Energia (Sprint 3)
+
+top to bottom direction
+skinparam shadowing false
+skinparam linetype ortho
+hide circle
+hide methods
+skinparam class {
+  BackgroundColor #F7F7F7
+  BorderColor #2B6CB0
+  ArrowColor #2B6CB0
+}
+
+entity usinas {
+  <b>PK</b> id : varchar(40)
+  --
+  nome : varchar(100)
+  cidade : varchar(100)
+  estado : varchar(2)
+  regiao : varchar(100)
+  status : varchar(20)
+  atualizada_em : datetime (ISO, com fuso)
+}
+
+entity creditos_usinas {
+  <b>PK</b> <b>FK</b> usina_id : varchar(40)
+  <b>PK</b> competencia : varchar(7)
+  --
+  valor : decimal(14,2)
+  moeda : varchar(3)
+  atualizado_em : datetime (ISO, com fuso)
+}
+
+entity depoimentos {
+  <b>PK</b> id : varchar(40)
+  --
+  nome_publico : varchar(100)
+  localidade : varchar(100)
+  avaliacao : integer
+  texto : text
+  publicacao_autorizada : boolean
+  economia_mensal_valor : decimal(14,2) (opcional)
+  economia_mensal_moeda : varchar(3) (opcional)
+  dias_para_ativacao : integer (opcional)
+  percentual_desconto : decimal(5,2) (opcional)
+  tempo_conta_ativa_meses : integer (opcional)
+  cliente_id : varchar(40) (opcional)
+}
+
+entity clientes {
+  <b>PK</b> id : varchar(40)
+  --
+  nome_exibicao : varchar(100)
+  email : varchar(254)
+  status : varchar(20)
+  <i>único</i> identificador_cliente : varchar(40)
+  codigo_verificacao : varchar(40)
+}
+
+entity contas {
+  <b>PK</b> id : varchar(60)
+  --
+  <b>FK</b> <i>único</i> cliente_id : varchar(40)
+  <i>único</i> email : varchar(254)
+  senha_hash : binary
+  status : varchar(20)
+  criada_em : datetime (ISO, com fuso)
+}
+
+entity sessoes {
+  <b>PK</b> id : varchar(60)
+  --
+  <b>FK</b> conta_id : varchar(60)
+  <b>FK</b> cliente_id : varchar(40)
+  criada_em : datetime (ISO, com fuso)
+  expira_em : datetime (ISO, com fuso)
+  invalidada_em : datetime (ISO, com fuso) (opcional)
+}
+
+entity ativacoes {
+  <b>PK</b> <b>FK</b> cliente_id : varchar(40)
+  --
+  status : varchar(20)
+  atualizado_em : datetime (ISO, com fuso)
+  iniciada_em : date (opcional)
+  previsao_conclusao : date (opcional)
+}
+
+entity etapas_ativacao {
+  <b>PK</b> <b>FK</b> cliente_id : varchar(40)
+  <b>PK</b> id : varchar(40)
+  --
+  ordem : integer
+  nome : varchar(100)
+  status : varchar(20)
+  concluida_em : datetime (ISO, com fuso) (opcional)
+  previsao_conclusao : date (opcional)
+}
+
+entity faturas {
+  <b>PK</b> id : varchar(40)
+  --
+  <b>FK</b> cliente_id : varchar(40)
+  identificador_exibivel : varchar(40)
+  competencia : varchar(7)
+  valor : decimal(14,2)
+  moeda : varchar(3)
+  status : varchar(20)
+  vencimento : date
+  atualizado_em : datetime (ISO, com fuso)
+}
+
+entity pagamentos {
+  <b>PK</b> <b>FK</b> fatura_id : varchar(40)
+  --
+  status : varchar(20)
+  atualizado_em : datetime (ISO, com fuso)
+  forma : varchar(30) (opcional)
+  pago_em : datetime (ISO, com fuso) (opcional)
+  valor : decimal(14,2) (opcional)
+  moeda : varchar(3) (opcional)
+}
+
+entity repasses {
+  <b>PK</b> <b>FK</b> fatura_id : varchar(40)
+  --
+  atualizado_em : datetime (ISO, com fuso)
+}
+
+entity etapas_repasse {
+  <b>PK</b> <b>FK</b> fatura_id : varchar(40)
+  <b>PK</b> id : varchar(40)
+  --
+  ordem : integer
+  nome : varchar(100)
+  status : varchar(20)
+  ocorrido_em : datetime (ISO, com fuso) (opcional)
+  previsao : date (opcional)
+  mensagem : varchar(200) (opcional)
+}
+
+entity preferencias_notificacao {
+  <b>PK</b> <b>FK</b> cliente_id : varchar(40)
+  --
+  habilitada : boolean
+  canais : varchar(100)
+  atualizada_em : datetime (ISO, com fuso)
+}
+
+usinas ||--o{ creditos_usinas : usina_id
+clientes ||--o| contas : cliente_id
+clientes ||--o{ sessoes : cliente_id
+contas ||--o{ sessoes : conta_id
+clientes ||--o| ativacoes : cliente_id
+ativacoes ||--o{ etapas_ativacao : cliente_id
+clientes ||--o{ faturas : cliente_id
+faturas ||--o| pagamentos : fatura_id
+faturas ||--o| repasses : fatura_id
+repasses ||--o{ etapas_repasse : fatura_id
+clientes ||--o| preferencias_notificacao : cliente_id
+
+@enduml

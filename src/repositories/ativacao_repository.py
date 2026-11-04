@@ -3,6 +3,9 @@
 from abc import ABC, abstractmethod
 from typing import Iterable
 
+from sqlalchemy.orm import sessionmaker
+
+from src.db.models import AtivacaoModel
 from src.domain.ativacao import Ativacao
 
 
@@ -17,3 +20,13 @@ class InMemoryAtivacaoRepository(AtivacaoRepository):
 
     def obter(self, cliente_id: str) -> Ativacao | None:
         return self._ativacoes.get(cliente_id)
+
+
+class SqlAtivacaoRepository(AtivacaoRepository):
+    def __init__(self, sessoes: sessionmaker) -> None:
+        self._sessoes = sessoes
+
+    def obter(self, cliente_id: str) -> Ativacao | None:
+        with self._sessoes() as sessao:
+            modelo = sessao.get(AtivacaoModel, cliente_id)
+            return modelo.para_dominio() if modelo else None

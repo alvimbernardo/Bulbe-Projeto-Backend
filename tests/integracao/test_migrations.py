@@ -9,6 +9,10 @@ from sqlalchemy import inspect
 from src.db.database import criar_engine
 
 RAIZ = Path(__file__).resolve().parents[2]
+TABELAS = {
+    "usinas", "creditos_usinas", "depoimentos", "clientes", "contas", "sessoes", "ativacoes",
+    "etapas_ativacao", "faturas", "pagamentos", "repasses", "etapas_repasse", "preferencias_notificacao",
+}
 
 
 def _config(monkeypatch, url: str) -> Config:
@@ -23,7 +27,7 @@ def test_upgrade_head_cria_as_tabelas(monkeypatch, url_banco_teste):
     engine = criar_engine(url_banco_teste)
     tabelas = set(inspect(engine).get_table_names())
     engine.dispose()
-    assert {"usinas", "creditos_usinas", "depoimentos", "alembic_version"} <= tabelas
+    assert TABELAS | {"alembic_version"} <= tabelas
 
 
 def test_downgrade_base_remove_as_tabelas(monkeypatch, url_banco_teste):
@@ -33,4 +37,4 @@ def test_downgrade_base_remove_as_tabelas(monkeypatch, url_banco_teste):
     engine = criar_engine(url_banco_teste)
     tabelas = set(inspect(engine).get_table_names())
     engine.dispose()
-    assert not {"usinas", "creditos_usinas", "depoimentos"} & tabelas
+    assert not TABELAS & tabelas

@@ -4,6 +4,11 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from threading import Lock
 
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import sessionmaker
+
+from src.db.models import SessaoModel
 from src.domain.sessao import Sessao
 
 
@@ -47,3 +52,41 @@ class InMemorySessaoRepository(SessaoRepository):
                 chave: sessao for chave, sessao in self._sessoes.items()
                 if sessao.esta_valida(agora)
             }
+
+
+class SqlSessaoRepository(SessaoRepository):
+    def __init__(self, sessoes: sessionmaker) -> None:
+        self._sessoes = sessoes
+
+    def salvar(self, sessao: Sessao) -> None:
+        with self._sessoes() as conexao:
+            conexao.add(SessaoModel.de_dominio(sessao))
+            try:
+                conexao.commit()
+            except IntegrityError:
+                conexao.rollback()
+                raise ValueError("Identificador de sessao ja existente.") from None
+
+    def obter(self, sessao_id: str) -> Sessao | None:
+        with self._sessoes() as conexao:
+            modelo = conexao.get(SessaoModel, sessao_id)
+            return modelo.para_dominio() if modelo else None
+
+    def invalidar(self, sessao_id: str, agora: datetime) -> bool:
+        with self._sessoes() as conexao:
+            modelo = conexao.get(SessaoModel, sessao_id, with_for_update=True)
+            if modelo is None:
+                return False
+            sessao = modelo.para_dominio()
+            if not sessao.invalidar(agora):
+                return False
+            modelo.invalidada_em = sessao.invalidada_em
+            conexao.commit()
+            return True
+
+    def limpar_expiradas(self, agora: datetime) -> None:
+        with self._sessoes() as conexao:
+            for modelo in conexao.scalars(select(SessaoModel)).all():
+                if not modelo.para_dominio().esta_valida(agora):
+                    conexao.delete(modelo)
+            conexao.commit()
