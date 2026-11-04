@@ -40,3 +40,63 @@ def test_dados_sobrevivem_ao_reinicio_da_aplicacao(app_com_banco):
         resposta = depois_do_reinicio.get("/v1/usinas/usina_02")
     assert resposta.status_code == 200
     assert resposta.json() == antes
+
+
+@pytest.fixture
+def app_com_banco_e_chave(monkeypatch, app_com_banco):
+    monkeypatch.setenv("BULBE_JWT_SECRET", "chave-de-teste-com-mais-de-32-bytes-bulbe")
+    return app_com_banco
+
+
+def _login(client, email="cliente01@exemplo.com", senha="Bulbe2026!") -> dict:
+    resposta = client.post("/v1/sessoes", json={"email": email, "senha": senha})
+    assert resposta.status_code == 201
+    return {"Authorization": f"Bearer {resposta.json()['access_token']}"}
+
+
+def test_jornada_do_cliente_com_banco(app_com_banco_e_chave):
+    with TestClient(app_com_banco_e_chave()) as client:
+        headers = _login(client)
+        assert client.get("/v1/clientes/cliente_01", headers=headers).status_code == 200
+        assert client.get("/v1/clientes/cliente_02", headers=headers).status_code == 403
+        ativacao = client.get("/v1/clientes/cliente_01/ativacao", headers=headers).json()
+        assert ativacao["percentual"] == 50
+        faturas = client.get("/v1/clientes/cliente_01/faturas", headers=headers).json()
+        assert [f["id"] for f in faturas["data"]] == ["fatura_02", "fatura_01"]
+        pagamento = client.get("/v1/clientes/cliente_01/faturas/fatura_01/pagamento", headers=headers)
+        assert pagamento.status_code == 200
+        repasse = client.get("/v1/clientes/cliente_01/faturas/fatura_01/repasse", headers=headers)
+        assert repasse.status_code == 200
+
+
+def test_conta_criada_continua_existindo_depois_do_reinicio(app_com_banco_e_chave):
+    cadastro = {
+        "email": "cliente03@exemplo.com",
+        "senha": "Senha12345",
+        "identificador_cliente": "BULBE-003",
+        "codigo_verificacao": "345678",
+    }
+    with TestClient(app_com_banco_e_chave()) as client:
+        assert client.post("/v1/contas", json=cadastro).status_code == 201
+    with TestClient(app_com_banco_e_chave()) as depois_do_reinicio:
+        assert depois_do_reinicio.post("/v1/contas", json=cadastro).status_code == 409
+        headers = _login(depois_do_reinicio, "cliente03@exemplo.com", "Senha12345")
+        assert depois_do_reinicio.get("/v1/clientes/cliente_03", headers=headers).status_code == 200
+
+
+def test_logout_continua_valendo_depois_do_reinicio(app_com_banco_e_chave):
+    with TestClient(app_com_banco_e_chave()) as client:
+        headers = _login(client)
+        assert client.delete("/v1/sessoes/atual", headers=headers).status_code == 204
+    with TestClient(app_com_banco_e_chave()) as depois_do_reinicio:
+        assert depois_do_reinicio.get("/v1/clientes/cliente_01", headers=headers).status_code == 401
+
+
+def test_preferencia_salva_continua_depois_do_reinicio(app_com_banco_e_chave):
+    corpo = {"habilitada": True, "canais": ["email"]}
+    rota = "/v1/clientes/cliente_01/preferencias-notificacao/ativacao"
+    with TestClient(app_com_banco_e_chave()) as client:
+        primeira = client.put(rota, json=corpo, headers=_login(client)).json()
+    with TestClient(app_com_banco_e_chave()) as depois_do_reinicio:
+        repetida = depois_do_reinicio.put(rota, json=corpo, headers=_login(depois_do_reinicio)).json()
+    assert repetida == primeira
