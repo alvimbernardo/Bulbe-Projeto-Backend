@@ -106,7 +106,7 @@ docs/
 ├── api/                     Contrato OpenAPI e orientação de consulta
 ├── diagramas/               Diagramas UML em PlantUML e SVG
 ├── requisitos/              Requisitos técnicos e lista de endpoints
-└── sprints/                 Backlog, critérios de aceite e plano da Sprint 2
+└── sprints/                 Backlogs, critérios de aceite e roteiros das reviews
 requirements.txt             Dependências da aplicação e dos testes
 alembic.ini                  Configuração do Alembic
 pytest.ini                   Configuração do pytest
@@ -295,7 +295,7 @@ python -m uvicorn src.main:app --reload
 
 | Variável | Padrão | Uso |
 | --- | --- | --- |
-| `BULBE_DATABASE_URL` | `sqlite:///./bulbe.db` | Endereço do banco. PostgreSQL: `postgresql+psycopg://usuario:senha@localhost:5432/bulbe` |
+| `BULBE_DATABASE_URL` | `sqlite:///./bulbe.db` | Endereço do banco. PostgreSQL: `postgresql+psycopg://usuario:senha@localhost:5432/bulbe` (exige `python -m pip install "psycopg[binary]"`) |
 | `BULBE_PERSISTENCIA` | `banco` | `memoria` volta a usar os repositórios em memória |
 
 ### Nova migration
@@ -322,6 +322,7 @@ O [diagrama de classes do domínio](docs/diagramas/classes-dominio.svg) continua
 - **Sprint 1:** elicitação dos requisitos, definição do contrato da API e modelagem UML.
 - **Sprint 2:** de **07/10/2026 a 21/10/2026**, com **Review em 26/10/2026**. Objetivo: API funcionando de ponta a ponta com dados em memória, quatro camadas, regras de negócio e testes passando.
 - **Planejamento detalhado:** [backlog da Sprint 2](docs/sprints/backlog-sprint-2.md), com prioridades, dependências, critérios de aceite e definição de pronto.
+- **Sprint 3:** de **28/10/2026 a 04/11/2026**, com **Review em 11/11/2026**. Objetivo: trocar a persistência em memória por banco relacional (SQLAlchemy 2 + Alembic), com migrations versionadas, seed e testes de integração. Detalhes no [backlog da Sprint 3](docs/sprints/backlog-sprint-3.md) e no [roteiro da Review III](docs/sprints/roteiro-review-sprint3.md).
 
 ### Divisão de trabalho da Sprint 2
 
