@@ -1,0 +1,15 @@
+:root {
+  --grayscale-600: var(--bulbe-color-gray-600);
+  --bulbe-primriasverde-floravf700: var(--bulbe-color-green);
+  --bulbe-basec600: var(--bulbe-color-gray-600);
+  --bulbe-primriasazul-cuac700: var(--bulbe-color-blue-text);
+  --grayscalebranco: var(--bulbe-color-white);
+  --bulbe-basebranco: var(--bulbe-color-white);
+  --bulbe-primriasverde-floravf50: var(--bulbe-color-green-soft);
+  --bulbe-primriasazul-cuac50: var(--bulbe-color-blue-soft);
+  --tokens-semantic-size-l: var(--tokens-base-dimension-250);
+  --tokens-semantic-borderradius-m: var(--bulbe-radius-inner);
+  --tokens-base-dimension-250: 40px;
+  --tokens-base-borderradius-m: var(--bulbe-radius-inner);
+  --tokens-base-borderradius-l: var(--bulbe-radius-button);
+}

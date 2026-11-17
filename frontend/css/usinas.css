@@ -1,0 +1,316 @@
+/* Quando o card for clicado, ele vai ocupar as duas colunas e mudar de cor */
+.card.active {
+  grid-column: span 2; /* Faz o card ocupar a largura total */
+  border-color: var(--bulbe-color-blue); /* Destaca a borda */
+  background-color: #f9f9ff; /* Dá um leve fundo diferenciado */
+  transition: all 0.3s ease; /* Deixa a transição suave */
+}
+
+/* Deixa o card com cursor de clique */
+.card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bulbe-color-app-backdrop);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  font-family: var(--bulbe-font-family);
+}
+
+.phone {
+  width: 100%;
+  max-width: var(--bulbe-page-max-width);
+  min-height: 100vh;
+  background: var(--bulbe-color-white);
+  overflow-x: hidden;
+  overflow-y: visible;
+  position: relative;
+}
+
+/* HEADER */
+
+/* HERO */
+
+.hero {
+  background: var(--bulbe-color-blue);
+  color: white;
+  padding: 20px var(--bulbe-page-padding) 35px;
+}
+
+.hero h1 {
+  font-family: 'Poppins', sans-serif;
+  max-width: 340px;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+}
+
+.hero p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.95;
+  max-width: 300px;
+}
+
+/* CONTENT */
+
+.content {
+  background: var(--bulbe-color-white);
+  padding: 30px var(--bulbe-page-padding) calc(var(--bulbe-navbar-five-height) + 28px);
+}
+
+.content h3 {
+  font-size: 13px;
+  color: #5f5f5f;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.card {
+  background: white;
+  border: var(--bulbe-border-subtle);
+  border-radius: var(--bulbe-radius-card);
+  padding: 14px;
+  box-shadow: var(--bulbe-shadow-card);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin-bottom: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #00d84f;
+  border-radius: 50%;
+}
+
+.card small {
+  color: #777;
+  font-size: 12px;
+}
+
+.price {
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #030231;
+}
+
+.credit {
+  color: #8f8f8f;
+  font-size: 13px;
+}
+
+
+
+.credit-box {
+  margin-top: 24px;
+  background: var(--bulbe-color-blue);
+  border-radius: var(--bulbe-radius-card);
+  padding: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--bulbe-radius-inner);
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.credit-box h2 {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.credit-box p {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* BUTTONS */
+
+.main-btn {
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  border-radius: var(--bulbe-radius-button);
+  background: var(--bulbe-color-blue);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 18px;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  width: 100%;
+  margin: 16px auto 0;
+  display: block;
+  min-height: 54px;
+  border: none;
+  border-radius: var(--bulbe-radius-button);
+  background: var(--bulbe-color-gray-100);
+  color: var(--bulbe-color-gray-900);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* NAV */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: var(--bulbe-page-max-width);
+  margin: 0 auto;
+  transform: none;
+  box-sizing: border-box;
+  z-index: 30;
+}
+
+@media (max-width: 430px) {
+  body {
+    align-items: flex-start;
+  }
+}
+/* Estilo Base dos Painéis */
+.sidebar-container, .popup-panel {
+  position: absolute;
+  background: white;
+  color: #333;
+  box-shadow: var(--bulbe-shadow-card);
+  z-index: 999;
+  transition: all 0.3s ease-in-out;
+}
+
+/* SIDEBAR (Vem deslizando da esquerda) */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    background-color: var(--bulbe-color-blue);
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+    border-radius: 0;
+}
+
+.sidebar a {
+    padding: 15px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+}
+
+.sidebar .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    font-size: 36px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* POPUPS (Notificação e Perfil) */
+.popup-panel {
+  position: absolute;
+  top: var(--bulbe-header-height);
+  width: 220px;
+  background: white;
+  color: #333;
+  padding: 16px;
+  border-radius: var(--bulbe-radius-inner);
+  box-shadow: var(--bulbe-shadow-card);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: 0.3s;
+}
+
+/* Classe dinâmica ativada pelo JS */
+.popup-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Posições dos popups na direita */
+.notification-pos { right: 50px; }
+.profile-pos { right: 16px; }
+
+.popup-panel h4 { font-size: 14px; margin-bottom: 6px; color: var(--bulbe-color-blue); }
+.popup-panel p, .popup-panel a { font-size: 12px; color: #666; text-decoration: none; }
+#menuBtn, #bellBtn, #profileBtn { cursor: pointer; }
+
+.dot.em_manutencao {
+  background: #f59e0b;
+}
+
+.dot.inativa {
+  background: #a4b3c1;
+}
+
+.card .situacao {
+  display: block;
+  margin-top: 2px;
+  color: #777;
+  font-size: 11px;
+}
+
+.api-aviso {
+  grid-column: 1 / -1;
+  padding: 14px;
+  border-radius: var(--bulbe-radius-inner);
+  background: var(--bulbe-color-blue-soft);
+  color: var(--bulbe-color-blue-text);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.api-aviso.erro {
+  background: #fdecec;
+  color: #b42318;
+}

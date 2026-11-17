@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informações da Ativação Bulbe</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/info-ativacao.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <div id="sidebar">
+    <button id="closeBtn">&times;</button>
+    </div>
+
+  <div class="phone-mockup">
+    <div class="app-container">
+      
+      <header class="hero-panel">
+        <div class="top-bar bulbe-header-row">
+          <button class="menu-btn" aria-label="Menu" id="menuBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <img class="logo" src="../assets/info-ativacao/logo-base.svg" alt="Bulbe" />
+          <div class="actions">
+            <button class="bell-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </button>
+            <div class="profile-circle"></div>
+          </div>
+        </div>
+
+        <div class="badge bulbe-badge bulbe-badge-warning">
+          <img class="badge-icon" src="../assets/info-ativacao/Vector%2064.svg" alt="Símbolo Financeiro" />
+          PRAZO REGULATÓRIO
+        </div>
+
+        <h1>O que acontece durante a homologação?</h1>
+        <p class="subtitle">Após assinar seu contrato, a CEMIG tem até 90 dias para homologar sua cota de energia e ativar os créditos.</p>
+      </header>
+
+      <main class="content-area">
+        <h2 class="section-title">LINHA DO TEMPO</h2>
+
+        <div class="timeline-card">
+          
+          <div class="timeline-step card">
+            <div class="marker marker-done"></div>
+            <div class="track-line track-green"></div>
+            <div class="step-content">
+              <div class="step-header"><span>ETAPA 1</span></div>
+              <h3 class="card-header-trigger">Contrato assinado <span class="accordion-arrow">▼</span></h3>
+              <p>Seu contrato com a Bulbe é confirmado e enviamos os documentos para a CEMIG.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step card">
+            <div class="marker marker-done"></div>
+            <div class="track-line track-green"></div>
+            <div class="step-content">
+              <div class="step-header"><span>ETAPA 2</span></div>
+              <h3 class="card-header-trigger">Análise documental <span class="accordion-arrow">▼</span></h3>
+              <p>A CEMIG verifica os dados cadastrais e valida as informações da sua UC</p>
+            </div>
+          </div>
+
+          <div class="timeline-step card">
+            <div class="marker marker-current"></div>
+            <div class="track-line track-dashed"></div>
+            <div class="step-content">
+              <div class="step-header"><span>ETAPA 3</span></div>
+              <h3 class="card-header-trigger">Homologação técnica <span class="accordion-arrow">▼</span></h3>
+              <p>Processo regulatório da CEMIG — a distribuidora vincula sua conta à usina Bulbe.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step card">
+            <div class="marker marker-pending"></div>
+            <div class="track-line track-dashed"></div>
+            <div class="step-content">
+              <div class="step-header"><span>ETAPA 4</span></div>
+              <h3 class="card-header-trigger">Ativação dos créditos <span class="accordion-arrow">▼</span></h3>
+              <p>Créditos começam a aparecer na sua fatura mensal automaticamente.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step card">
+            <div class="marker marker-pending"></div>
+            <div class="step-content">
+              <div class="step-header"><span>ETAPA 5</span></div>
+              <h3 class="card-header-trigger">Economia garantida <span class="accordion-arrow">▼</span></h3>
+              <p>Você começa a pagar menos todo mês, sem precisar fazer nada.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-icon">i</div>
+          <p>Você será notificado a cada etapa concluída pelo app.</p>
+        </div>
+      </main>
+
+    </div> 
+
+    <nav class="bottom-nav bulbe-nav bulbe-nav-five">
+      <a class="nav-item" href="intro-bulbe.html" onclick="setActiveNav(this)">
+        <img class="nav-icon-img" src="../assets/info-ativacao/Home2.svg" alt="Início" />
+        <span>Início</span>
+      </a>
+      <a class="nav-item" href="usinas.html" onclick="setActiveNav(this)">
+        <img class="nav-icon-img" src="../assets/info-ativacao/Solar%20Panel.svg" alt="Usinas" />
+        <span>Usinas</span>
+      </a>
+      <a class="nav-item" href="experiencia.html" onclick="setActiveNav(this)">
+        <img class="nav-icon-img" src="../assets/info-ativacao/Vector.svg" alt="Histórias" />
+        <span>Histórias</span>
+      </a>
+      <a class="nav-item active" href="info-ativacao.html" onclick="setActiveNav(this)">
+        <img class="nav-icon-img" src="../assets/info-ativacao/Vector-1.svg" alt="Ativação" />
+        <span>Ativação</span>
+      </a>
+      <a class="nav-item" href="login.html" onclick="setActiveNav(this)">
+        <img class="nav-icon-img" src="../assets/info-ativacao/Profile.svg" alt="Entrar" />
+        <span>Entrar</span>
+      </a>
+    </nav>
+  </div> 
+
+  <script>
+    // CONTROLE DA SIDEBAR
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const sidebar = document.getElementById('sidebar');
+
+    menuBtn.addEventListener('click', () => {
+        sidebar.style.width = '250px';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        sidebar.style.width = '0';
+    });
+
+    // CONTROLE DOS CARDS EXPANSÍVEIS (ACCORDION LOGIC)
+    const cardTriggers = document.querySelectorAll('.card-header-trigger');
+
+    cardTriggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            const currentCard = trigger.closest('.card');
+            const arrow = trigger.querySelector('.accordion-arrow');
+            
+            // Verifica se o card clicado já está aberto
+            const isOpen = currentCard.classList.contains('active');
+            
+            // Fecha todos os outros cards antes de abrir o novo
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active');
+                const cardArrow = card.querySelector('.accordion-arrow');
+                if (cardArrow) cardArrow.textContent = '▼';
+            });
+
+            // Se o card não estava aberto, abre ele e vira a seta para cima
+            if (!isOpen) {
+                currentCard.classList.add('active');
+                arrow.textContent = '▲';
+            }
+        });
+    });
+
+    // CONTROLE DA NAVBAR INFERIOR
+    function setActiveNav(clickedButton) {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        clickedButton.classList.add('active');
+    }
+  </script>
+</body>
+</html>

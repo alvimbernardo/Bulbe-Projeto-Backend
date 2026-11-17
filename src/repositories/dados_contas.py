@@ -20,7 +20,7 @@ _HASHES_EXEMPLO = (
 def clientes_exemplo() -> list[Cliente]:
     return [
         Cliente("cliente_01", "Cliente de Montes Claros", "cliente01@exemplo.com", "ativo", "BULBE-001", "123456"),
-        Cliente("cliente_02", "Comercio de Janauba", "cliente02@exemplo.com", "ativo", "BULBE-002", "234567"),
+        Cliente("cliente_02", "Comércio de Janaúba", "cliente02@exemplo.com", "ativo", "BULBE-002", "234567"),
         Cliente("cliente_03", "Cliente de Pirapora", "cliente03@exemplo.com", "ativo", "BULBE-003", "345678"),
         Cliente("cliente_04", "Cliente inativo", "cliente04@exemplo.com", "inativo", "BULBE-004", "456789"),
     ]

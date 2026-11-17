@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluxo de Telas Bulbe</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/preview.css" />
+</head>
+<body>
+  <main class="preview-page">
+    <header class="preview-hero">
+      <img src="../assets/introducao-bulbe/logo-base.svg" alt="Bulbe" class="preview-logo" />
+      <p class="preview-kicker">Projeto Bulbe</p>
+      <h1>Fluxo de Telas Bulbe</h1>
+      <p class="preview-description">
+        Uma jornada de visualizacao para acompanhar a descoberta da energia solar,
+        a ativacao da conta e o acompanhamento da fatura. Todas as telas
+        agora leem os dados da API Bulbe.
+      </p>
+      <a class="bulbe-button bulbe-button-primary preview-start" href="intro-bulbe.html">Comecar fluxo</a>
+    </header>
+
+    <section class="preview-flow" aria-label="Jornada de telas">
+      <article class="flow-card" id="etapa-1">
+        <span class="flow-step">1</span>
+        <h2>Introducao Bulbe</h2>
+        <p>Apresenta como os creditos solares chegam a conta sem obra ou investimento.</p>
+        <div class="flow-actions">
+          <a class="open-screen" href="intro-bulbe.html">Abrir tela</a>
+          <a href="#etapa-2">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-2">
+        <span class="flow-step">2</span>
+        <h2>Usinas</h2>
+        <p>Mostra usinas ativas e o total de creditos gerados para clientes.</p>
+        <div class="flow-actions">
+          <a href="#etapa-1">Tela anterior</a>
+          <a class="open-screen" href="usinas.html">Abrir tela</a>
+          <a href="#etapa-3">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-3">
+        <span class="flow-step">3</span>
+        <h2>Experiencia do Cliente</h2>
+        <p>Reune historias reais para dar contexto a economia e ao processo de ativacao.</p>
+        <div class="flow-actions">
+          <a href="#etapa-2">Tela anterior</a>
+          <a class="open-screen" href="experiencia.html">Abrir tela</a>
+          <a href="#etapa-4">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-4">
+        <span class="flow-step">4</span>
+        <h2>Info Ativacao</h2>
+        <p>Explica o prazo regulatorio e a linha do tempo da homologacao.</p>
+        <div class="flow-actions">
+          <a href="#etapa-3">Tela anterior</a>
+          <a class="open-screen" href="info-ativacao.html">Abrir tela</a>
+          <a href="#etapa-5">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-5">
+        <span class="flow-step">5</span>
+        <h2>Entrar ou Criar Conta</h2>
+        <p>Login e cadastro reais: a conta e a sessao ficam gravadas no banco e o acesso usa token JWT.</p>
+        <div class="flow-actions">
+          <a href="#etapa-4">Tela anterior</a>
+          <a class="open-screen" href="login.html">Abrir tela</a>
+          <a href="#etapa-6">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-6">
+        <span class="flow-step">6</span>
+        <h2>Ativacao da Sua Conta</h2>
+        <p>Acompanha o status atual, etapas concluidas e atualizacoes da ativacao do cliente logado.</p>
+        <div class="flow-actions">
+          <a href="#etapa-5">Tela anterior</a>
+          <a class="open-screen" href="ativacao.html">Abrir tela</a>
+          <a href="#etapa-7">Proxima tela</a>
+        </div>
+      </article>
+
+      <article class="flow-card" id="etapa-7">
+        <span class="flow-step">7</span>
+        <h2>Fatura e Repasse</h2>
+        <p>Fecha a jornada com o pagamento confirmado e o repasse para a distribuidora.</p>
+        <div class="flow-actions">
+          <a href="#etapa-6">Tela anterior</a>
+          <a class="open-screen" href="fatura-e-repasse.html">Abrir tela</a>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

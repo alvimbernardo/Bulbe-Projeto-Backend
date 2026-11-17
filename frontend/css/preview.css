@@ -1,0 +1,139 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bulbe-color-gray-50);
+  color: var(--bulbe-color-gray-700);
+  font-family: var(--bulbe-font-family);
+}
+
+.preview-page {
+  width: min(100%, 920px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 40px);
+}
+
+.preview-hero {
+  padding: clamp(24px, 5vw, 48px);
+  border-radius: var(--radius-xl);
+  background: var(--bulbe-color-blue);
+  color: var(--bulbe-color-white);
+}
+
+.preview-logo {
+  display: block;
+  width: 112px;
+  height: auto;
+  margin-bottom: 28px;
+}
+
+.preview-kicker {
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.preview-hero h1 {
+  max-width: 520px;
+  margin: 0 0 12px;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.12;
+}
+
+.preview-description {
+  max-width: 610px;
+  margin: 0 0 24px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.preview-start {
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--bulbe-color-white);
+  color: var(--bulbe-color-blue);
+}
+
+.preview-flow {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.flow-card {
+  scroll-margin-top: 18px;
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: var(--bulbe-border-subtle);
+  border-radius: var(--bulbe-radius-card);
+  background: var(--bulbe-color-white);
+  box-shadow: var(--bulbe-shadow-card);
+}
+
+.flow-step {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bulbe-color-blue-soft);
+  color: var(--bulbe-color-blue);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flow-card h2 {
+  margin: 0;
+  color: var(--bulbe-color-gray-900);
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.flow-card p {
+  margin: 0;
+  color: var(--bulbe-color-gray-600);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.flow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.flow-actions a {
+  min-height: 38px;
+  padding: 10px 12px;
+  border-radius: var(--bulbe-radius-button);
+  background: var(--bulbe-color-gray-100);
+  color: var(--bulbe-color-blue);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.flow-actions .open-screen {
+  background: var(--bulbe-color-blue);
+  color: var(--bulbe-color-white);
+}
+
+@media (min-width: 720px) {
+  .preview-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

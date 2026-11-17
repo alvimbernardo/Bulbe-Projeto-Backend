@@ -92,7 +92,14 @@ src/
 ├── repositories/            Interfaces, implementações em memória e SQL, e dados de exemplo
 ├── domain/                  Entidades, objetos de valor e erros de negócio
 ├── db/                      Conexão, modelos SQLAlchemy, tipos de coluna e seed
+├── frontend.py              Entrega das telas em /app e CORS do Live Server
 └── main.py                  Aplicação, registro de rotas e handlers de erro
+frontend/                    Telas do app Bulbe (HTML, CSS e JS) ligadas à API
+├── pages/                   As 8 telas, começando por preview.html
+├── js/api.js                Cliente HTTP: endereço da API, token JWT e formatação
+├── js/                      Um script por tela, cada um consumindo seus endpoints
+├── css/                     Estilos e design system do frontend
+└── assets/                  Ícones e imagens
 migrations/                  Migrations do Alembic (versions/)
 tests/
 ├── conftest.py              Aplicação e TestClient novos a cada teste
@@ -164,10 +171,46 @@ Requer Python 3.11 ou superior. Execute os comandos a partir da raiz do reposit�
 
 Sem variáveis de ambiente, a API usa o SQLite `bulbe.db` na raiz do projeto. Detalhes em [Banco de dados](#banco-de-dados).
 
+- **Telas do app (frontend integrado):** <http://localhost:8000/app>.
 - **API e rota de status:** <http://localhost:8000/>.
 - **Swagger UI:** <http://localhost:8000/docs>.
 - **ReDoc:** <http://localhost:8000/redoc>.
 - **Contrato gerado pela aplicação:** <http://localhost:8000/openapi.json>.
+
+## Frontend integrado
+
+As telas do frontend da Squad Master (repositório `bulbe-squad-master`, Projeto Aplicado I) estão na pasta `frontend/` e agora leem e gravam dados pela API. A própria API entrega as telas, então basta um servidor:
+
+```bash
+alembic upgrade head
+python -m src.db.seed
+$env:BULBE_JWT_SECRET = "chave-da-demonstracao-com-mais-de-32-bytes"   # Windows (PowerShell)
+python -m uvicorn src.main:app --reload
+```
+
+Depois abra <http://localhost:8000/app>.
+
+| Tela | Endpoints usados | Login |
+| --- | --- | --- |
+| Usinas | `GET /v1/usinas`, `GET /v1/usinas/{id}/creditos`, `GET /v1/creditos-usinas/resumo` | Não |
+| Histórias | `GET /v1/depoimentos` | Não |
+| Entrar / Cadastro | `POST /v1/sessoes`, `POST /v1/contas`, `GET /v1/clientes/{id}`, `DELETE /v1/sessoes/atual` | Não |
+| Ativação | `GET /v1/clientes/{id}/ativacao`, `GET /v1/clientes/{id}/ativacao/etapas`, `PUT .../preferencias-notificacao/ativacao` | Sim |
+| Fatura e Repasse | `GET /v1/clientes/{id}/faturas`, `.../faturas/{id}`, `.../pagamento`, `.../repasse` | Sim |
+| Introdução e Info Ativação | Conteúdo explicativo, sem dados da API | Não |
+
+Contas de demonstração criadas pelo seed:
+
+| Cliente | E-mail | Senha | Situação |
+| --- | --- | --- | --- |
+| cliente_01 | `cliente01@exemplo.com` | `Bulbe2026!` | Ativação em 50% e duas faturas (uma paga, uma em aberto) |
+| cliente_02 | `cliente02@exemplo.com` | `Bulbe2026!` | Ativação concluída e uma fatura em aberto |
+
+Para testar o cadastro, use `cliente03@exemplo.com`, uma senha com 8 caracteres ou mais, o identificador `BULBE-003` e o código `345678`.
+
+O token JWT fica no `localStorage` do navegador e vai no cabeçalho `Authorization` de cada chamada da área do cliente. Se a API devolver 401, a tela volta para o login.
+
+Também é possível abrir as telas pelo Live Server do VS Code (porta 5500). Nesse caso o frontend chama a API em `http://127.0.0.1:8000`, e a API libera essa origem por CORS. Outras origens podem ser liberadas com `BULBE_CORS_ORIGENS` (lista separada por vírgula).
 
 ## Como rodar os testes
 

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulbe - Entrar</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <header class="header bulbe-app-header">
+        <button class="menu-btn bulbe-header-control bulbe-header-menu" id="menuBtn" type="button" aria-label="Abrir menu">☰</button>
+        <div class="logo-container bulbe-header-logo">
+          <img src="../assets/introducao-bulbe/logo-base.svg" alt="Bulbe">
+        </div>
+        <div class="header-icons bulbe-header-actions">
+          <img src="../assets/introducao-bulbe/icon.svg" alt="Notificações" class="bell-icon bulbe-header-icon-only">
+          <div class="user-avatar bulbe-header-profile" aria-hidden="true"></div>
+        </div>
+      </header>
+
+      <aside class="sidebar" id="sidebar" aria-hidden="true">
+        <button class="close-btn" id="closeBtn" type="button" aria-label="Fechar menu">&times;</button>
+        <a href="intro-bulbe.html">Início</a>
+        <a href="usinas.html">Usinas</a>
+        <a href="experiencia.html">Histórias</a>
+        <a href="info-ativacao.html">Ativação</a>
+      </aside>
+
+      <main class="login-content">
+        <section class="login-hero">
+          <span class="login-eyebrow">ÁREA DO CLIENTE</span>
+          <h1>Energia limpa e transparência na sua conta</h1>
+          <p>Acesse sua jornada Bulbe ou inicie seu cadastro.</p>
+        </section>
+
+        <section class="auth-card session-card" id="sessionCard" hidden>
+          <div class="auth-heading">
+            <h2>Olá, <span id="sessionName">cliente</span>!</h2>
+            <p>Você está conectado como <strong id="sessionEmail"></strong>.</p>
+          </div>
+          <div class="session-actions">
+            <a class="bulbe-button bulbe-button-primary auth-submit" href="ativacao.html">Ver minha ativação</a>
+            <a class="bulbe-button bulbe-button-secondary auth-submit" href="fatura-e-repasse.html">Ver minhas faturas</a>
+            <button class="session-logout" id="logoutButton" type="button">Sair da conta</button>
+          </div>
+        </section>
+
+        <section class="auth-card" id="authCard" aria-labelledby="auth-title">
+          <div class="auth-tabs" role="tablist" aria-label="Acesso à conta">
+            <button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true" aria-controls="loginPanel">Login</button>
+            <button class="auth-tab" id="registerTab" type="button" role="tab" aria-selected="false" aria-controls="registerPanel">Cadastro</button>
+          </div>
+
+          <div class="auth-panel" id="loginPanel" role="tabpanel" aria-labelledby="loginTab">
+            <div class="auth-heading">
+              <h2 id="auth-title">Que bom ter você de volta</h2>
+              <p>Entre com os dados da sua conta.</p>
+            </div>
+
+            <form class="auth-form" id="loginForm">
+              <label for="loginEmail">E-mail</label>
+              <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required>
+
+              <label for="loginPassword">Senha</label>
+              <div class="password-field">
+                <input id="loginPassword" name="senha" type="password" autocomplete="current-password" placeholder="Digite sua senha" required>
+                <button class="password-toggle" type="button" data-password-target="loginPassword" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+
+              <button class="bulbe-button bulbe-button-primary auth-submit" type="submit">Entrar</button>
+            </form>
+          </div>
+
+          <div class="auth-panel" id="registerPanel" role="tabpanel" aria-labelledby="registerTab" hidden>
+            <div class="auth-heading">
+              <h2>Cadastro / primeiro acesso</h2>
+              <p>Use o identificador e o código que a Bulbe enviou junto com o seu contrato.</p>
+            </div>
+
+            <form class="auth-form" id="registerForm">
+              <label for="registerEmail">E-mail</label>
+              <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required>
+
+              <label for="registerPassword">Crie uma senha</label>
+              <div class="password-field">
+                <input id="registerPassword" name="senha" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" minlength="8" required>
+                <button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+
+              <label for="registerIdentifier">Identificador do cliente</label>
+              <input id="registerIdentifier" name="identificador_cliente" type="text" placeholder="Ex.: BULBE-003" required>
+
+              <label for="registerCode">Código de verificação</label>
+              <input id="registerCode" name="codigo_verificacao" type="text" inputmode="numeric" placeholder="6 dígitos" required>
+
+              <button class="bulbe-button bulbe-button-primary auth-submit" type="submit">Criar minha conta</button>
+            </form>
+          </div>
+
+          <p class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="security-note" aria-label="Informação de segurança">
+          <span class="security-icon" aria-hidden="true">✓</span>
+          <p><strong>Conexão segura com a API Bulbe.</strong> Sua senha é guardada com hash e o acesso usa token JWT.</p>
+        </section>
+      </main>
+
+      <nav class="bottom-nav bulbe-nav bulbe-nav-five" aria-label="Navegação principal">
+        <a class="nav-item" href="intro-bulbe.html">
+          <img src="../assets/introducao-bulbe/Home.svg" alt="">
+          <span>Início</span>
+        </a>
+        <a class="nav-item" href="usinas.html">
+          <img src="../assets/introducao-bulbe/Solar Panel.svg" alt="">
+          <span>Usinas</span>
+        </a>
+        <a class="nav-item" href="experiencia.html">
+          <img src="../assets/introducao-bulbe/Vector.svg" alt="">
+          <span>Histórias</span>
+        </a>
+        <a class="nav-item" href="info-ativacao.html">
+          <img src="../assets/experiencia-do-cliente/flash.svg" alt="">
+          <span>Ativação</span>
+        </a>
+        <a class="nav-item active" href="login.html" aria-current="page">
+          <img src="../assets/introducao-bulbe/Profile.svg" alt="">
+          <span>Entrar</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/login.js"></script>
+</body>
+</html>
