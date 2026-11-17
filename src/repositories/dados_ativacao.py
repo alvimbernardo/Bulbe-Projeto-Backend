@@ -8,7 +8,7 @@ from src.repositories.dados_exemplo import BRASILIA
 
 def ativacoes_exemplo() -> list[Ativacao]:
     """Uma ativacao em andamento e outra concluida, novas a cada chamada."""
-    nomes = ("Cadastro recebido", "Documentacao validada", "Homologacao", "Creditos ativos")
+    nomes = ("Cadastro recebido", "Documentação validada", "Homologação", "Créditos ativos")
     atualizacao = datetime(2026, 10, 20, 9, tzinfo=BRASILIA)
     andamento = tuple(
         EtapaAtivacao(

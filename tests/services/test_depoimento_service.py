@@ -17,7 +17,7 @@ def test_dados_publicos_nao_expoem_cliente(depoimento_service):
 
 
 def test_obter_depoimento_autorizado(depoimento_service):
-    assert depoimento_service.obter("depoimento_02").nome_publico == "Comercio de Janauba"
+    assert depoimento_service.obter("depoimento_02").nome_publico == "Comércio de Janaúba"
 
 
 def test_depoimento_nao_autorizado_e_404(depoimento_service):

@@ -39,7 +39,7 @@ def repasses_exemplo() -> list[Repasse]:
     return [Repasse("fatura_01", (
         EtapaRepasse("repasse_etapa_01", 1, "Pagamento confirmado", StatusEtapaRepasse.concluida,
                      ocorrido_em=_data(8, 15, 11), mensagem="Pagamento recebido pela Bulbe."),
-        EtapaRepasse("repasse_etapa_02", 2, "Repasse a CEMIG", StatusEtapaRepasse.atual,
+        EtapaRepasse("repasse_etapa_02", 2, "Repasse à CEMIG", StatusEtapaRepasse.atual,
                      previsao=date(2026, 8, 18), mensagem="Repasse em processamento."),
-        EtapaRepasse("repasse_etapa_03", 3, "Repasse concluido", StatusEtapaRepasse.pendente),
+        EtapaRepasse("repasse_etapa_03", 3, "Repasse concluído", StatusEtapaRepasse.pendente),
     ), _data(8, 17))]
