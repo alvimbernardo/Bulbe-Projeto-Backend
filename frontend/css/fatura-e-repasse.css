@@ -1,0 +1,545 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--bulbe-font-family);
+}
+
+body {
+    background-color: var(--bulbe-color-app-backdrop);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.celular {
+    width: 100%;
+    max-width: var(--bulbe-page-max-width);
+    min-height: 100vh;
+    background-color: var(--bulbe-color-page);
+    box-shadow: none;
+    border-radius: 0;
+    
+    /* Ativa o flexbox para segurar o conteúdo e o rodapé */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+/* Remove os estilos padrão de listas e botões globais */
+ul {
+    list-style: none;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.header-fatura {
+    background-color: var(--bulbe-color-blue);
+    color: #ffffff;
+    padding: 0 var(--bulbe-page-padding) 32px;
+    border-radius: 0;
+}
+
+
+.header-fatura .topo {
+    display: flex;
+    align-items: center; 
+    gap: 12px;           
+    min-height: var(--bulbe-header-height);
+    margin-bottom: 16px; 
+}
+
+.header-fatura h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.status-pagamento {
+    font-size: 12px;
+    color: #00B15E; 
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+.status-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.check-icone {
+    width: 16px;
+    height: 16px;
+}
+
+.valor {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.detalhe-fatura {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7); /* Texto branco com opacidade */
+    margin-bottom: 24px;
+}
+
+/* Alinhamento dos cards de PIX e Data lado a lado */
+.cards {
+    display: flex;
+    gap: 12px;
+}
+
+.card-pix, .card-data {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--bulbe-radius-inner);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-pix {
+    background-color: #E9FBF2;
+    color: #18814D;
+}
+
+.card-data {
+    background-color: #E6F1FE;
+    color: #054894;
+}
+
+.status {
+    padding: 24px var(--bulbe-page-padding) 20px; 
+    background-color: #ffffff;
+}
+
+.status h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #536679;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+
+.timeline {
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; 
+    top: 12px;
+    bottom: 24px;
+    width: 2px;
+    background-color: #E2E8F0; /* Cor padrão da linha cinza */
+}
+
+/* Estrutura de cada item da lista */
+.timeline li {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* As Bolinhas de Status */
+.circulo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #cbd5e1; /* Cor cinza padrão (Pendente) */
+    z-index: 1; /* Fica por cima da linha vertical */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilização dos textos das etapas */
+.conteudo-etapa, .andamento, .pendente {
+    flex: 1;
+}
+
+.conteudo-etapa h4, .andamento h4, .pendente h4 {
+    font-size: 14px;
+    color: #1E293B;
+    text-transform: none;
+    letter-spacing: normal;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.conteudo-etapa p, .andamento p, .pendente p {
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.previsao-data, .data-etapa {
+    display: block;
+    font-size: 11px;
+    color: #94A3B8;
+    margin-bottom: 8px;
+}
+
+
+
+
+/* 1. Concluído (Verde com Gradiente e Sombra) */
+.timeline li.concluido .circulo {
+    width: 21px;                  /* Ajustado para bater com os 21px da ativação */
+    height: 21px;                 /* Ajustado para bater com os 21px da ativação */
+    background: linear-gradient(180deg, #22c55e, #3bff83);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border: none;
+}
+/* Alinha o check branco perfeitamente no meio da bolinha verde */
+.timeline li.concluido .circulo::after {
+    content: '✓';
+    color: #ffffff;
+    font-size: 11px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+/* 2. Em Andamento (Azul Escuro com Outline e Gradiente) */
+.timeline li:nth-child(3) .circulo { 
+    width: 21px;                  /* Ajustado para 21px */
+    height: 21px;                 /* Ajustado para 21px */
+    background: linear-gradient(180deg, #010047, #1411c5);
+    border: 2px solid #ffffff;    /* Borda branca interna */
+    outline: 2px solid var(--bulbe-color-blue, #00068D); /* Outline azul por fora */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+/* Remove o '✓' caso ele tente herdar de algum lugar */
+.timeline li:nth-child(3) .circulo::after {
+    content: none;
+}
+
+/* 3. Pendente (Cinza com Miolo Chumbo) */
+.timeline li .circulo {
+    width: 21px;                  /* Ajustado para 21px */
+    height: 21px;                 /* Ajustado para 21px */
+    background: #d9dade;          /* Base cinza idêntica */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border: none;
+    position: relative;
+}
+/* Cria o pontinho cinza escuro dentro da bolinha pendente */
+.timeline li:not(.concluido):not(:nth-child(3)) .circulo::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #64748b;          /* Cor cinza chumbo idêntica */
+}
+
+
+
+.botao {
+    padding: 0 var(--bulbe-page-padding);       
+    margin-top: 10px;      
+    margin-bottom: 30px; 
+    width: 100%;
+}
+
+
+
+.historico {
+    width: 100%;                  
+    background-color: var(--bulbe-color-blue);
+    color: #ffffff;    
+    padding: 16px 24px;          
+    border-radius: var(--bulbe-radius-button);          
+    font-size: 15px;
+    font-weight: 600;             
+    display: flex;               
+    align-items: center;          
+    justify-content: center;     
+    gap: 8px;                     
+    border: none;
+    cursor: pointer;
+}
+
+
+.historico img {
+    height: 16px; 
+    width: auto;
+}
+
+.menu-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: var(--bulbe-page-max-width);
+    margin: 0 auto;
+    transform: none;
+    box-sizing: border-box;
+    z-index: 30;
+}
+.conteudo-rolavel {
+    flex: 1;
+    overflow-y: auto; 
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Shared Bulbe surface alignment */
+body {
+    background-color: var(--bulbe-color-app-backdrop);
+    align-items: flex-start;
+    overflow-x: hidden;
+}
+
+.celular {
+    max-width: var(--bulbe-page-max-width);
+    min-height: 100vh;
+    height: auto;
+    background-color: var(--bulbe-color-page);
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.header-fatura {
+    background-color: var(--bulbe-color-blue);
+    padding-inline: var(--bulbe-page-padding);
+    border-radius: 0;
+}
+
+.cards > div,
+.historico {
+    border-radius: var(--bulbe-radius-button);
+}
+
+.card-pix {
+    background-color: var(--bulbe-color-green-soft);
+    color: var(--bulbe-color-green);
+}
+
+.card-data {
+    background-color: var(--bulbe-color-blue-soft);
+    color: var(--bulbe-color-blue-text);
+}
+
+.status {
+    padding-inline: var(--bulbe-page-padding);
+}
+
+.status h4 {
+    color: var(--bulbe-color-gray-600);
+}
+
+.timeline::before {
+    background-color: var(--bulbe-color-gray-200);
+}
+
+.circulo {
+    background-color: var(--bulbe-color-gray-300);
+}
+
+.conteudo-etapa h4,
+.andamento h4,
+.pendente h4 {
+    color: var(--bulbe-color-gray-900);
+}
+
+.conteudo-etapa p,
+.andamento p,
+.pendente p {
+    color: var(--bulbe-color-gray-600);
+}
+
+.timeline li.concluido .circulo {
+    background-color: var(--bulbe-color-green-bright);
+}
+
+.badge-concluido {
+    background-color: var(--bulbe-color-green-soft);
+    color: var(--bulbe-color-green);
+    border-radius: var(--bulbe-radius-badge);
+}
+
+.timeline li:nth-child(3) .circulo {
+    background-color: var(--bulbe-color-blue);
+    border-color: var(--bulbe-color-blue-soft);
+}
+
+.andamento div span {
+    background-color: var(--bulbe-color-blue-soft);
+    color: var(--bulbe-color-blue-text);
+    border-radius: var(--bulbe-radius-badge);
+}
+
+.pendente h4 {
+    color: var(--bulbe-color-gray-400);
+}
+
+.pendente span {
+    background-color: var(--bulbe-color-gray-100);
+    color: var(--bulbe-color-gray-600);
+    border-radius: var(--bulbe-radius-badge);
+}
+
+.botao {
+    padding-inline: var(--bulbe-page-padding);
+}
+
+.historico {
+    min-height: 54px;
+    background-color: var(--bulbe-color-blue);
+    font-size: 16px;
+}
+
+.menu-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: var(--bulbe-page-max-width);
+    margin: 0 auto;
+    transform: none;
+    box-sizing: border-box;
+    z-index: 30;
+}
+
+.conteudo-rolavel {
+    width: 100%;
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding-bottom: calc(var(--bulbe-navbar-four-height) + 20px);
+}
+
+.cards,
+.status,
+.botao,
+.timeline,
+.timeline li,
+.card-pix,
+.card-data {
+    max-width: 100%;
+}
+
+/* Etapas vindas da API: o estado de cada etapa define a bolinha */
+.timeline li.atual .circulo,
+.timeline li.atual:nth-child(n) .circulo {
+    background: linear-gradient(180deg, #010047, #1411c5);
+    border: 2px solid #ffffff;
+    outline: 2px solid var(--bulbe-color-blue);
+}
+
+.timeline li.atual .circulo::after {
+    content: none;
+}
+
+.timeline li.concluido:nth-child(n) .circulo {
+    background: linear-gradient(180deg, #22c55e, #3bff83);
+    border: none;
+    outline: none;
+}
+
+.timeline li.concluido:nth-child(n) .circulo::after {
+    content: '✓';
+    position: static;
+    width: auto;
+    height: auto;
+    background: none;
+}
+
+.timeline li.aguardando:nth-child(n) .circulo {
+    background: #d9dade;
+    border: none;
+    outline: none;
+}
+
+.timeline li.aguardando:nth-child(n) .circulo::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #64748b;
+}
+
+.status-container.pendente-pagamento .status-pagamento {
+    color: #ffd27a;
+}
+
+.lista-faturas {
+    padding: 0 var(--bulbe-page-padding);
+    margin-bottom: 12px;
+}
+
+.lista-faturas[hidden] {
+    display: none;
+}
+
+.lista-faturas h4 {
+    margin-bottom: 10px;
+    color: var(--bulbe-color-gray-600);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.lista-faturas-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.item-fatura {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--bulbe-color-gray-200);
+    border-radius: var(--bulbe-radius-inner);
+    background: #ffffff;
+    font-family: var(--bulbe-font-family);
+    text-align: left;
+    cursor: pointer;
+}
+
+.item-fatura.selecionada {
+    border-color: var(--bulbe-color-blue);
+    background: var(--bulbe-color-blue-soft);
+}
+
+.item-fatura strong {
+    display: block;
+    color: var(--bulbe-color-gray-900);
+    font-size: 14px;
+}
+
+.item-fatura small {
+    color: var(--bulbe-color-gray-600);
+    font-size: 12px;
+}
+
+.item-fatura .valor-item {
+    color: var(--bulbe-color-gray-900);
+    font-size: 14px;
+    font-weight: 700;
+}

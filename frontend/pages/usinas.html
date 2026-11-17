@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bulbe</title>
+
+  <link rel="stylesheet" href="../css/global.css"/>
+  <link rel="stylesheet" href="../css/usinas.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="phone">
+
+    <!-- HEADER -->
+    <header class="topbar bulbe-app-header">
+<div class="menu" id="menuBtn">☰</div>      
+
+    
+     <img class="logo" src="../assets/info-ativacao/logo-base.svg" alt="Bulbe" />
+
+      <div class="top-icons">
+        
+<img src="../assets/introducao-bulbe/icon.svg" alt="Notificações" class="bell-icon" id="bellBtn">
+
+<div class="profile" id="profileBtn"></div>      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <h1>Energia limpa gerando créditos pra você</h1>
+
+      <p>
+        Nossas usinas solares geram energia
+        e enviam créditos - que desconta
+        direto na sua conta.
+      </p>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="content">
+
+      <h3 id="usinasTitulo">USINAS ATIVAS</h3>
+
+      <div class="cards" id="usinasCards" aria-live="polite">
+        <p class="api-aviso">Carregando usinas da API...</p>
+      </div>
+
+      <!-- CREDIT BOX -->
+      <div class="credit-box">
+        <div class="icon-box">💡</div>
+        <div>
+          <h2 id="totalCreditos">—</h2>
+          <p id="totalCreditosLegenda">Total gerado em créditos<br>para clientes</p>
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <a class="main-btn bulbe-button bulbe-button-primary" href="login.html">
+        Quero meus créditos →
+      </a>
+
+      <button class="secondary-btn bulbe-button bulbe-button-secondary" id="verTodasUsinas" type="button">
+        Ver todas as usinas
+      </button>
+
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav bulbe-nav bulbe-nav-five">
+
+      <a class="nav-item" href="intro-bulbe.html">
+        <img src="../assets/experiencia-do-cliente/Home2.svg" alt="Início" class="nav-icon-img">
+        <p>Início</p>
+      </a>
+
+      <a class="nav-item active" href="usinas.html">
+        <img src="../assets/introducao-bulbe/Solar Panel.svg" alt="Usinas" class="nav-icon-img">
+        <p>Usinas</p>
+      </a>
+
+      <a class="nav-item" href="experiencia.html">
+        <img src="../assets/introducao-bulbe/Vector.svg" alt="Histórias" class="nav-icon-img">
+        <p>Histórias</p>
+      </a>
+
+      <a class="nav-item" href="info-ativacao.html">
+        <img src="../assets/experiencia-do-cliente/flash.svg" alt="Ativação" class="nav-icon-img">
+        <p>Ativação</p>
+      </a>
+
+      <a class="nav-item" href="login.html">
+        <img src="../assets/introducao-bulbe/Profile.svg" alt="Entrar" class="nav-icon-img">
+        <p>Entrar</p>
+      </a>
+
+    </nav>
+    <div id="sidebar" class="sidebar">
+      <button class="close-btn" id="closeBtn">&times;</button>
+      <a href="login.html">Minha Conta</a>
+      <a href="#">Configurações</a>
+      <a href="#">Ajuda</a>
+      <a href="#">Sair</a>
+    </div>
+
+    <div id="notificationsPanel" class="popup-panel notification-pos">
+      <h4>Notificações</h4>
+      <p>Você não tem novas mensagens.</p>
+    </div>
+
+    <div id="profilePanel" class="popup-panel profile-pos">
+      <h4>Olá, Usuário!</h4>
+      <a href="#">Editar Perfil</a>
+    </div>
+  </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/usinas.js"></script>
+    
+</body>
+</html>

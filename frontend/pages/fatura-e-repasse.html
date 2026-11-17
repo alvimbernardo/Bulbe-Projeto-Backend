@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatura e repasse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/fatura-e-repasse.css">
+
+    
+</head>
+<body>
+    <main class="celular">
+        <div class="conteudo-rolavel">
+        <header class="header-fatura">
+            <div class="topo">
+            <button class="voltar">
+                <img src="../assets/fatura-e-repasse/setavoltar.svg" alt="">
+            </button>
+            <h1>Fatura & Repasse</h1>
+            </div>
+           <div class="status-container">
+        <img src="../assets/fatura-e-repasse/check.svg" alt="" class="check-icone" id="iconePagamento">
+        <p class="status-pagamento" id="statusPagamento">Carregando fatura...</p>
+            </div>
+            <h2 class="valor" id="valorFatura">—</h2>
+            <p class="detalhe-fatura" id="detalheFatura">Buscando dados na API</p>
+            <div class="cards">
+                <div class="card-pix" id="cardPix"><span id="formaPagamento">—</span>
+                    <img src="../assets/fatura-e-repasse/pix.svg" alt="">
+                </div>
+                <div class="card-data">
+                    <span id="dataPagamento">—</span>
+                    <img src="../assets/fatura-e-repasse/calendario.svg" alt="">
+                </div>
+            </div>
+
+        </header>
+        <section class="status">
+            <h4>Status do repasse à cemig</h4>
+            <ul class="timeline" id="timelineRepasse" aria-live="polite"></ul>
+        </section>
+        
+        <section class="lista-faturas" id="listaFaturas" hidden>
+            <h4>Suas faturas</h4>
+            <div class="lista-faturas-itens" id="listaFaturasItens"></div>
+        </section>
+
+        <div class="botao">
+                <button class="historico bulbe-button bulbe-button-primary">
+                <span id="historicoTexto">Ver histórico de faturas</span>
+                <img src="../assets/fatura-e-repasse/seta.svg" alt="">
+            </button>
+            </div>
+        </div>
+        <nav class="menu-inferior bulbe-nav bulbe-nav-four" aria-label="Navegação da conta">
+            <a class="nav-link" href="ativacao.html">
+                <img src="../assets/fatura-e-repasse/Espera.svg" alt="">
+                <span>Espera</span>
+            </a>
+            <a class="nav-link nav-link-active" href="fatura-e-repasse.html">
+                <img src="../assets/ativacao-da-sua-conta/file-06.svg" alt="">
+                <span>Faturas</span>
+            </a>
+            <a class="nav-link" href="#">
+                <img src="../assets/ativacao-da-sua-conta/flash.svg" alt="">
+                <span>Consumo</span>
+            </a>
+            <a class="nav-link" href="preview.html">
+                <img src="../assets/ativacao-da-sua-conta/users-plus.svg" alt="">
+                <span>Indicações</span>
+            </a>
+        </nav>
+        <script src="../js/api.js"></script>
+        <script src="../js/fatura-e-repasse.js"></script>
+</body>
+</html>

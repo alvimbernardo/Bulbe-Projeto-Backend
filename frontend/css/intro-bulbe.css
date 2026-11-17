@@ -1,0 +1,379 @@
+/* IMPORTANDO AS FONTES DIRETO DO GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap');
+
+/* RESET DE ESTILOS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bulbe-color-app-backdrop);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 0;
+    font-family: var(--bulbe-font-family);
+}
+
+/* SMARTPHONE MOCKUP */
+.phone-mockup {
+    width: 100%;
+    max-width: var(--bulbe-page-max-width);
+    min-height: 100vh;
+    height: auto;
+    background-color: var(--bulbe-color-white);
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* TELA INTERNA DO CELULAR */
+.phone-screen {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    background-color: var(--bulbe-color-page);
+    border-radius: 0;
+    overflow-y: visible;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-screen::-webkit-scrollbar {
+    width: 0px; /* Oculta a barra de scroll para parecer app nativo */
+}
+
+/* CONTAINER PRINCIPAL DO CONTEÚDO */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bulbe-color-page);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: calc(var(--bulbe-navbar-five-height) + 28px);
+}
+
+/* HEADER COM CENTRALIZAÇÃO ABSOLUTA DA LOGO */
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 25; /* Garante que o botão fique acima do clique da logo */
+}
+
+/* LOGO TOTALMENTE CENTRALIZADA E MAIOR */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute; /* Mágica para centralizar no meio exato do cabeçalho */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px; /* Aumentado de 26px para 32px para dar mais destaque */
+    font-weight: 700; 
+    color: white;
+    text-transform: lowercase; 
+    letter-spacing: -1px;
+}
+
+.logo-symbol {
+    height: 22px; /* Aumentado de 18px para 22px para acompanhar o texto */
+    object-fit: contain;
+    margin-top: 6px;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 25; /* Garante que os ícones fiquem acima do clique da logo */
+}
+
+.bell-icon {
+    height: 22px;
+    width: 22px;
+    cursor: pointer;
+    filter: brightness(0) invert(1); 
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border: 2px solid white;
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+/* HERO SECTION - TIPOGRAFIA CORRIGIDA */
+.hero-section {
+    background-color: var(--bulbe-color-blue);
+    color: white;
+    padding: 20px var(--bulbe-page-padding) 35px;
+    text-align: left;
+}
+
+.hero-section h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700; /* Peso correto do Figma */
+    margin-bottom: 14px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.hero-section p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    opacity: 0.85;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   SEÇÃO COMO FUNCIONA (ACCORDION UPDATED)
+   ========================================================================== */
+.how-it-works {
+    padding: 30px var(--bulbe-page-padding);
+}
+
+.how-it-works h2 {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #475569;
+    margin-bottom: 25px;
+}
+
+/* CONTAINER DO CARD */
+.card {
+    display: flex;
+    flex-direction: column; /* Alinha o header em cima e o conteúdo embaixo */
+    padding: 16px;
+    border-radius: var(--bulbe-radius-card);
+    margin-bottom: 16px;
+    border: var(--bulbe-border-subtle);
+    transition: background-color 0.2s ease;
+}
+
+/* HEADER DO CARD (A BARRA CLICÁVEL) */
+.card-header-trigger {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+}
+
+.step-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.card-header-trigger h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    flex-grow: 1; /* Empurra a seta para a extremidade direita */
+    margin: 0;
+}
+
+/* SETA DO ACCORDION */
+.accordion-arrow {
+    font-size: 12px;
+    color: #94a3b8;
+    transition: transform 0.2s ease;
+    padding-left: 8px;
+}
+
+/* CONTEÚDO EXPANSÍVEL (MÁGICA DO ABRIR/FECHAR) */
+.card-body-content {
+    max-height: 0; /* Começa totalmente escondido */
+    overflow: hidden;
+    transition: max-height 0.25s ease-out, opacity 0.2s ease;
+    opacity: 0;
+}
+
+.card-body-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+    font-weight: 400;
+    padding-top: 10px; /* Dá o espaçamento perfeito quando o texto abre */
+    padding-left: 44px; /* Alinha o texto perfeitamente abaixo do título, pulando o número */
+}
+
+/* ESTADO ATIVO (QUANDO CLICADO) */
+.card.active .card-body-content {
+    max-height: 100px; /* Permite que o container expanda e mostre o texto */
+    opacity: 1;
+}
+
+/* CORES DOS CARDS (MANTIDAS DO SEU PADRÃO) */
+.card-green { background-color: var(--bulbe-color-green-soft); }
+.card-green .step-number { background-color: #2ecc71; }
+.card-green h3 { color: #27ae60; }
+.card-green .accordion-arrow { color: #27ae60; }
+
+.card-blue { background-color: #f0f4ff; }
+.card-blue .step-number { background-color: var(--bulbe-color-blue-text); }
+.card-blue h3 { color: var(--bulbe-color-blue); }
+.card-blue .accordion-arrow { color: var(--bulbe-color-blue); }
+
+.card-purple { background-color: #f3f0ff; }
+.card-purple .step-number { background-color: #7048e8; }
+.card-purple h3 { color: #7048e8; }
+.card-purple .accordion-arrow { color: #7048e8; }
+
+.card-orange { background-color: #fff9db; }
+.card-orange .step-number { background-color: #f59f00; }
+.card-orange h3 { color: #f59f00; }
+.card-orange .accordion-arrow { color: #f59f00; }
+
+/* DIAGRAMA DO FLUXO */
+.generation-flow {
+    text-align: center;
+    margin: 30px 0;
+    padding: 15px;
+    border-top: 1px dashed var(--bulbe-color-gray-200);
+    border-bottom: 1px dashed var(--bulbe-color-gray-200);
+}
+
+.generation-flow h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.flow-steps {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.flow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+}
+
+.flow-icon {
+    font-size: 22px;
+    background: #f0f4ff;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-bottom: 8px;
+}
+
+.flow-item p {
+    font-size: 11px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.arrow {
+    color: #ff9800;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* CTA BOTÃO */
+.cta-section {
+    padding: 10px var(--bulbe-page-padding) 30px;
+    text-align: center;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: var(--bulbe-color-blue);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: var(--bulbe-radius-button);
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* NAVBAR INFERIOR STICKY CORRIGIDA */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: var(--bulbe-page-max-width);
+    margin: 0 auto;
+    transform: none;
+    box-sizing: border-box;
+    z-index: 30;
+}
+
+/* SIDEBAR */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    background-color: var(--bulbe-color-blue);
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+    border-radius: 0;
+}
+
+.sidebar a {
+    padding: 15px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+}
+
+.sidebar .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    font-size: 36px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
