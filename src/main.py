@@ -52,6 +52,7 @@ from src.services.historico_faturas_service import HistoricoFaturasService
 from src.controllers.preferencia_controller import router as preferencia_router
 from src.repositories.preferencia_repository import InMemoryPreferenciaRepository, SqlPreferenciaRepository
 from src.services.preferencia_service import PreferenciaService
+from src.frontend import configurar_frontend
 
 
 def _request_id(request: Request) -> str:
@@ -169,6 +170,7 @@ def create_app() -> FastAPI:
     app.include_router(fatura_router)
     app.include_router(historico_router)
     app.include_router(preferencia_router)
+    configurar_frontend(app)
     return app
 
 
